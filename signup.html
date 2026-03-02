@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Account — Project Management</title>
+    <title>Sign Up — Management</title>
     <meta name="description"
-        content="Create your Project Management employee account and start managing and exploring projects." />
+        content="Create your Management employee account and start managing and exploring projects." />
     <link rel="stylesheet" href="styles/main.css" />
     <link rel="stylesheet" href="styles/auth.css" />
 </head>
@@ -19,7 +19,7 @@
     <div class="auth-card auth-card-wide">
         <div class="auth-logo">
             <div class="auth-logo-icon" style="width:52px;height:52px;font-size:1.4rem">📊</div>
-            <h1>Project Management</h1>
+            <h1>Management</h1>
             <p>Business Project Management System</p>
         </div>
 
@@ -189,7 +189,7 @@
             setTimeout(() => {
                 const result = Auth.signup({ name, employeeId: studentId, email, department: dept, batch, password });
                 if (result.ok) {
-                    showToast('Account created successfully! Welcome to Project Management!', 'success');
+                    showToast('Account created successfully! Welcome to Management!', 'success');
                     setTimeout(() => location.href = 'student/dashboard.html', 700);
                 } else {
                     errEl.textContent = result.error;
