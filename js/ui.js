@@ -292,3 +292,30 @@ function renderAnnouncementBanner(containerId) {
     </div>
   `;
 }
+
+/* ── Theme Management ────────────────────────────────────── */
+const Theme = {
+    init() {
+        const saved = localStorage.getItem('pmo_theme') || 'light';
+        this.set(saved);
+    },
+    set(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('pmo_theme', theme);
+        this.updateButtons(theme);
+    },
+    toggle() {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = current === 'light' ? 'dark' : 'light';
+        this.set(next);
+    },
+    updateButtons(theme) {
+        document.querySelectorAll('.btn-theme').forEach(btn => {
+            btn.innerHTML = theme === 'light' ? '🌙' : '☀️';
+            btn.title = `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`;
+        });
+    }
+};
+
+// Initialize theme on load
+Theme.init();
