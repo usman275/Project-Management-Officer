@@ -1,0 +1,596 @@
+/* ============================================================
+   STUDENT PORTAL LAYOUT  — Light Theme
+   ============================================================ */
+
+/* Portal wrapper */
+.portal-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg-dark);
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--gray-300);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 200;
+    transition: transform var(--transition-base), width var(--transition-base);
+    box-shadow: 2px 0 16px rgba(99, 102, 241, 0.06);
+    overflow: hidden;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 20px var(--space-5);
+    border-bottom: 1px solid var(--gray-200);
+    min-height: var(--topbar-height);
+}
+
+.sidebar-logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+.sidebar-logo-text {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--gray-900);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.sidebar-logo-text span {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: var(--space-4) var(--space-3);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray-400);
+    padding: var(--space-3) var(--space-3) var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 10px var(--space-3);
+    border-radius: var(--radius-md);
+    color: var(--gray-600);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    text-decoration: none;
+    margin-bottom: 2px;
+    position: relative;
+    border: 1px solid transparent;
+}
+
+.sidebar-link:hover {
+    background: var(--gray-100);
+    color: var(--gray-900);
+}
+
+.sidebar-link.active {
+    background: var(--primary-100);
+    color: var(--primary-700);
+    border-color: rgba(99, 102, 241, 0.2);
+    font-weight: 600;
+}
+
+.sidebar-link .nav-icon {
+    font-size: 1.15rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-link .nav-badge {
+    margin-left: auto;
+    background: var(--primary-500);
+    color: var(--white);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+    padding: var(--space-4) var(--space-3);
+    border-top: 1px solid var(--gray-200);
+}
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 10px var(--space-3);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.sidebar-user:hover {
+    background: var(--gray-100);
+}
+
+.sidebar-user-info {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.sidebar-user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-user-role {
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    white-space: nowrap;
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.portal-main {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left var(--transition-base);
+}
+
+/* Top bar */
+.portal-topbar {
+    height: var(--topbar-height);
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-300);
+    padding: 0 var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.06);
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.topbar-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.topbar-subtitle {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.menu-toggle:hover {
+    background: var(--gray-100);
+    color: var(--gray-900);
+}
+
+/* Notification bell */
+.notif-btn {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+}
+
+.notif-btn:hover {
+    background: var(--primary-100);
+    border-color: var(--primary-300);
+    color: var(--primary-600);
+}
+
+.notif-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 7px;
+    height: 7px;
+    background: var(--error-500);
+    border-radius: 50%;
+    border: 1.5px solid var(--white);
+}
+
+/* Page content */
+.portal-content {
+    flex: 1;
+    padding: var(--space-6);
+}
+
+/* Page header */
+.page-header {
+    margin-bottom: var(--space-6);
+}
+
+.page-header h1 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+}
+
+.page-header p {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+/* ============================================================
+   UPLOAD FORM
+   ============================================================ */
+.upload-form {
+    max-width: 800px;
+}
+
+.upload-section {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-5);
+    box-shadow: var(--shadow-sm);
+}
+
+.upload-section-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--gray-700);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+/* File upload zone */
+.file-upload-zone {
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-lg);
+    padding: 40px var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+    background: var(--gray-100);
+}
+
+.file-upload-zone:hover,
+.file-upload-zone.drag-over {
+    border-color: var(--primary-400);
+    background: var(--primary-100);
+}
+
+.file-upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-3);
+    opacity: 0.6;
+}
+
+.file-upload-text {
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 6px;
+}
+
+.file-upload-hint {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+.file-selected {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: var(--success-100);
+    border: 1px solid rgba(5, 150, 105, 0.3);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-3);
+    font-size: 0.875rem;
+    color: var(--success-500);
+}
+
+/* Tags input */
+.tags-input-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--white);
+    border: 1.5px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    min-height: 48px;
+    cursor: text;
+    transition: all var(--transition-base);
+}
+
+.tags-input-wrapper:focus-within {
+    border-color: var(--primary-400);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    background: var(--primary-100);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: var(--radius-full);
+    font-size: 0.78rem;
+    color: var(--primary-700);
+    font-weight: 500;
+}
+
+.tag-chip button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-400);
+    font-size: 0.7rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.tag-chip button:hover {
+    color: var(--error-500);
+}
+
+.tags-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    color: var(--gray-900);
+    font-size: 0.9rem;
+    flex: 1;
+    min-width: 100px;
+}
+
+/* ============================================================
+   PROJECT DETAIL VIEW
+   ============================================================ */
+.project-detail-header {
+    background: linear-gradient(135deg, var(--primary-100), rgba(196, 181, 253, 0.2));
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8) var(--space-8) var(--space-6);
+    margin-bottom: var(--space-6);
+}
+
+.project-detail-dept {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-600);
+    margin-bottom: var(--space-3);
+}
+
+.project-detail-title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--gray-900);
+    line-height: 1.2;
+    margin-bottom: var(--space-4);
+}
+
+.project-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.project-detail-meta>div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.project-detail-meta strong {
+    color: var(--gray-800);
+}
+
+.project-detail-body {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--space-6);
+    align-items: start;
+}
+
+.project-abstract {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    line-height: 1.8;
+}
+
+.project-sidebar-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.pdf-viewer-container {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-top: var(--space-6);
+    box-shadow: var(--shadow-sm);
+}
+
+.pdf-viewer-header {
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 0.875rem;
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.pdf-viewer-frame {
+    width: 100%;
+    height: 600px;
+    border: none;
+    background: var(--gray-100);
+}
+
+/* ============================================================
+   PROFILE PAGE
+   ============================================================ */
+.profile-header {
+    background: linear-gradient(135deg, var(--primary-100), rgba(196, 181, 253, 0.2));
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-6);
+}
+
+/* ============================================================
+   RESPONSIVE - Portal
+   ============================================================ */
+@media (max-width: 1024px) {
+    .project-detail-body {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .portal-main {
+        margin-left: 0;
+    }
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.4);
+        z-index: 199;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .portal-content {
+        padding: var(--space-4);
+    }
+
+    .project-detail-header {
+        padding: var(--space-5);
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+}

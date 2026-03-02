@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login — Project Management</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/auth.css" />
+</head>
+
+<body class="auth-page">
+    <div class="auth-bg" style="--orb1:rgba(176,119,12,.3);--orb2:rgba(245,185,62,.15)"></div>
+    <div class="auth-bg-accent"></div>
+    <div class="auth-grid"></div>
+
+    <div class="auth-card admin-variant">
+        <div class="auth-logo">
+            <div class="auth-logo-icon" style="width:52px;height:52px;font-size:1.4rem">🏛️</div>
+            <h1>Project Management</h1>
+            <p>Administration Panel</p>
+        </div>
+
+        <div class="auth-heading">
+            <h2>Admin Login</h2>
+            <p>Identity verification required</p>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label class="form-label">Admin Email</label>
+                <div class="input-group">
+                    <span class="input-icon">👤</span>
+                    <input type="email" id="email" class="form-control" placeholder="admin@domain.com" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Access Key</label>
+                <div class="input-group">
+                    <span class="input-icon">🔑</span>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required />
+                </div>
+            </div>
+
+            <div id="form-error" class="form-error" style="margin-bottom:var(--space-4);display:none"></div>
+
+            <button type="submit" class="btn btn-accent btn-full btn-lg" id="login-btn">Secure Entrance</button>
+        </form>
+
+        <div class="auth-footer-link">
+            Not an administrator? <a href="../login.html">Employee Login →</a>
+        </div>
+        <div class="auth-footer-link" style="margin-top:8px">
+            <a href="../index.html">← Back to Home</a>
+        </div>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        redirectIfAdminLoggedIn();
+        if (Session.isStudent()) {
+            // don't redirect here, admin can still log in
+        }
+
+        function togglePass(icon) {
+            const inp = document.getElementById('password');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            icon.textContent = inp.type === 'password' ? '👁️' : '🙈';
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errEl = document.getElementById('form-error');
+            const btn = document.getElementById('login-btn');
+            errEl.style.display = 'none';
+
+            if (!email || !password) {
+                errEl.textContent = 'Please enter email and access key.';
+                errEl.style.display = 'flex';
+                return;
+            }
+
+            setLoading(btn, true, 'Verifying credentials…');
+            setTimeout(() => {
+                const result = Auth.adminLogin(email, password);
+                if (result.ok) {
+                    showToast('Admin access granted. Welcome back!', 'success');
+                    setTimeout(() => location.href = 'dashboard.html', 600);
+                } else {
+                    errEl.textContent = result.error;
+                    errEl.style.display = 'flex';
+                    setLoading(btn, false);
+                }
+            }, 800);
+        });
+    </script>
+</body>
+
+</html>

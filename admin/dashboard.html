@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard — Project Management</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+    <link rel="stylesheet" href="../styles/admin.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🏛️</div>
+                <div class="sidebar-logo-text">Project Management<span>Admin Panel</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Dashboard</span>
+                <a href="dashboard.html" class="sidebar-link active"><span class="nav-icon">📊</span>
+                    Overview</a>
+
+                <span class="sidebar-section-label">Management</span>
+                <a href="users.html" class="sidebar-link"><span class="nav-icon">👥</span> Manage Users</a>
+                <a href="projects.html" class="sidebar-link"><span class="nav-icon">📁</span> Manage Projects</a>
+                <a href="departments.html" class="sidebar-link"><span class="nav-icon">🏫</span> Departments &
+                    Batches</a>
+                <a href="announcements.html" class="sidebar-link"><span class="nav-icon">📢</span>
+                    Announcements</a>
+
+                <span class="sidebar-section-label">System</span>
+                <a href="settings.html" class="sidebar-link"><span class="nav-icon">⚙️</span> Settings</a>
+                <a href="#" class="sidebar-link" onclick="Auth.adminLogout()"><span class="nav-icon">🚪</span>
+                    Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm" id="sidebar-avatar"
+                        style="background:linear-gradient(135deg,#b8770c,#f5b93e);color:#1a1000">AD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar admin-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div>
+                        <div class="topbar-title">Overview Dashboard</div>
+                        <div class="topbar-subtitle" id="dash-date"></div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <a href="projects.html" class="btn btn-accent btn-sm">⚡ Pending Reviews</a>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <!-- KPI Stats -->
+                <div class="grid-stats" style="margin-bottom:var(--space-6)">
+                    <div class="stat-card blue">
+                        <div class="stat-icon blue">📚</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="st-projects">—</div>
+                            <div class="stat-label">Total Projects</div>
+                        </div>
+                    </div>
+                    <div class="stat-card gold">
+                        <div class="stat-icon gold">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="st-approved">—</div>
+                            <div class="stat-label">Approved</div>
+                        </div>
+                    </div>
+                    <div class="stat-card red">
+                        <div class="stat-icon red">⏳</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="st-pending">—</div>
+                            <div class="stat-label">Pending Review</div>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon green">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="st-users">—</div>
+                            <div class="stat-label">Registered Employees</div>
+                        </div>
+                    </div>
+                    <div class="stat-card blue">
+                        <div class="stat-icon blue">🏫</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="st-depts">—</div>
+                            <div class="stat-label">Departments</div>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon purple">👁</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="st-views">—</div>
+                            <div class="stat-label">Total Views</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="gap:var(--space-5);align-items:start">
+                    <!-- Bar chart: projects by Cohort -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <div class="chart-card-title">📈 Projects by Year</div>
+                                <div class="chart-card-subtitle">Submissions per academic Cohort</div>
+                            </div>
+                        </div>
+                        <div class="bar-chart" id="batch-chart"></div>
+                        <div
+                            style="display:flex;justify-content:center;gap:16px;margin-top:12px;font-size:.72rem;color:var(--gray-500)">
+                            <span>Year</span>
+                        </div>
+                    </div>
+
+                    <!-- Donut: status breakdown -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div>
+                                <div class="chart-card-title">🥧 Project Status</div>
+                                <div class="chart-card-subtitle">Approval breakdown</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:var(--space-6)">
+                            <div class="donut-chart" id="status-donut">
+                                <div class="donut-center">
+                                    <div class="donut-center-value" id="donut-total">—</div>
+                                    <div class="donut-center-label">Total</div>
+                                </div>
+                            </div>
+                            <div class="chart-legend" id="status-legend"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Log + Department breakdown -->
+                <div class="grid-2" style="gap:var(--space-5);margin-top:var(--space-5);align-items:start">
+                    <!-- Recent Activity -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div class="chart-card-title">🕐 Recent Activity</div>
+                        </div>
+                        <div class="activity-list" id="activity-list"></div>
+                    </div>
+
+                    <!-- Department breakdown -->
+                    <div class="chart-card">
+                        <div class="chart-card-header">
+                            <div class="chart-card-title">🏫 Projects by Department</div>
+                        </div>
+                        <div id="dept-breakdown"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        if (!requireAdmin()) throw new Error('not admin');
+        initSidebar();
+        initTopbar('admin');
+
+        document.getElementById('dash-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        const stats = Stats.get();
+        document.getElementById('st-projects').textContent = stats.totalProjects;
+        document.getElementById('st-approved').textContent = stats.approved;
+        document.getElementById('st-pending').textContent = stats.pending;
+        document.getElementById('st-users').textContent = stats.totalUsers;
+        document.getElementById('st-depts').textContent = stats.departments;
+        document.getElementById('st-views').textContent = stats.totalViews;
+
+        // Cohort bar chart
+        const batchData = Stats.byBatch();
+        const maxVal = Math.max(...batchData.map(([, n]) => n), 1);
+        document.getElementById('batch-chart').innerHTML = batchData.map(([b, n]) => `
+    <div class="bar-item">
+      <div class="bar" style="height:${Math.max(8, Math.round((n / maxVal) * 140))}px" data-value="${n}"></div>
+      <div class="bar-label">${b}</div>
+    </div>
+  `).join('') || '<p style="color:var(--gray-600);font-size:.8rem">No data</p>';
+
+        // Status donut
+        const total = stats.totalProjects || 1;
+        const p1pct = Math.round((stats.approved / total) * 100);
+        const p2pct = Math.round(((stats.approved + stats.pending) / total) * 100);
+        const p3pct = Math.round(((stats.approved + stats.pending + stats.rejected) / total) * 100);
+        document.getElementById('status-donut').style.setProperty('--p1', p1pct + '%');
+        document.getElementById('status-donut').style.setProperty('--p2', p2pct + '%');
+        document.getElementById('status-donut').style.setProperty('--p3', p3pct + '%');
+        document.getElementById('donut-total').textContent = stats.totalProjects;
+        document.getElementById('status-legend').innerHTML = [
+            ['var(--primary-400)', 'Approved', stats.approved],
+            ['var(--accent-400)', 'Pending', stats.pending],
+            ['#34d399', 'Rejected', stats.rejected],
+        ].map(([color, label, count]) => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${color}"></div>
+      <span>${label}</span>
+      <span style="margin-left:auto;font-weight:700;color:var(--white)">${count}</span>
+    </div>
+  `).join('');
+
+        // Activity
+        const acts = Activity.recent(8);
+        document.getElementById('activity-list').innerHTML = acts.map(a => `
+    <div class="activity-item">
+      <div class="activity-icon" style="background:rgba(59,82,212,.15)">${a.icon}</div>
+      <div class="activity-body">
+        <div class="activity-action">${a.msg}</div>
+        <div class="activity-time">${timeAgo(a.time)}</div>
+      </div>
+    </div>
+  `).join('') || '<p style="color:var(--gray-600);font-size:.875rem">No activity yet.</p>';
+
+        // Department breakdown
+        const deptData = Stats.byDept();
+        const deptMax = Math.max(...deptData.map(([, n]) => n), 1);
+        document.getElementById('dept-breakdown').innerHTML = deptData.length ? deptData.map(([dept, count]) => `
+    <div style="margin-bottom:var(--space-4)">
+      <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:6px">
+        <span style="color:var(--gray-400)">${escapeHtml(dept)}</span>
+        <span style="color:var(--white);font-weight:700">${count}</span>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${Math.round((count / deptMax) * 100)}%;background:linear-gradient(90deg,var(--primary-500),var(--primary-300));border-radius:3px;transition:width .8s ease"></div>
+      </div>
+    </div>
+  `).join('') : '<p style="color:var(--gray-600);font-size:.875rem">No data.</p>';
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Projects — Project Management</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🎓</div>
+                <div class="sidebar-logo-text">Project Management<span>Employee Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Navigation</span>
+                <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">🏠</span> Dashboard</a>
+                <a href="browse.html" class="sidebar-link"><span class="nav-icon">🔍</span> Browse Projects</a>
+                <a href="upload.html" class="sidebar-link"><span class="nav-icon">📤</span> Upload Project</a>
+                <a href="my-projects.html" class="sidebar-link active"><span class="nav-icon">📁</span> My
+                    Projects</a>
+
+                <span class="sidebar-section-label">Account</span>
+                <a href="profile.html" class="sidebar-link"><span class="nav-icon">👤</span> My Profile</a>
+                <a href="#" class="sidebar-link" onclick="Auth.logout()"><span class="nav-icon">🚪</span> Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm" id="topbar-avatar"
+                        style="background:linear-gradient(135deg,#3b52d4,#6b7ff5);cursor:pointer"
+                        onclick="location.href='profile.html'" title="View Profile">U</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Employee</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div>
+                        <div class="topbar-title">My Projects</div>
+                        <div class="topbar-subtitle">Manage your uploaded projects</div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <a href="upload.html" class="btn btn-primary btn-sm">📤 Upload New Project</a>
+                    <a href="browse.html" class="btn btn-outline btn-full">🔍 Browse All Projects</a>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div id="projects-container"></div>
+            </div>
+        </main>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        if (!requireStudent()) throw new Error('not logged in');
+        initSidebar();
+        initTopbar('employee');
+
+        const user = Session.currentUser();
+
+        function render() {
+            const projects = Projects.byUser(user.id).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            const c = document.getElementById('projects-container');
+
+            if (!projects.length) {
+                c.innerHTML = `
+        <div class="empty-state" style="margin-top:60px">
+          <div class="empty-icon">📁</div>
+          <h3>No Projects Uploaded Yet</h3>
+          <p>Share your project with the team!</p>
+          <a href="upload.html" class="btn btn-primary">📤 Upload Your First Project</a>
+        </div>
+      `;
+                return;
+            }
+
+            c.innerHTML = `
+      <div style="margin-bottom:var(--space-5)">
+        <span style="font-size:.875rem;color:var(--gray-500)">${projects.length} project${projects.length !== 1 ? 's' : ''} uploaded</span>
+      </div>
+      <div class="project-grid">
+        ${projects.map(p => `
+          <div class="project-card">
+            <div class="project-card-header">
+              <div class="project-card-dept">${escapeHtml(p.department)} · ${escapeHtml(p.batch)}</div>
+              <h3>${escapeHtml(p.title)}</h3>
+              <div style="margin-top:6px">${statusBadge(p.status)}</div>
+            </div>
+            <div class="project-card-body">
+              <p class="project-card-abstract">${escapeHtml(p.abstract)}</p>
+              <div class="project-card-meta">
+                <span>👨‍🏫 ${escapeHtml(p.supervisor)}</span>
+                <span>📅 ${formatDate(p.createdAt)}</span>
+              </div>
+            </div>
+            <div class="project-card-footer">
+              <div style="font-size:.75rem;color:var(--gray-600)">👁 ${p.views || 0} · ❤️ ${p.likes || 0}</div>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-ghost btn-sm" onclick="viewProject('${p.id}')">View</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProject('${p.id}')">Delete</button>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+        }
+
+        function viewProject(id) {
+            location.href = 'project.html?id=' + id;
+        }
+
+        function deleteProject(id) {
+            const p = Projects.get(id);
+            if (!p) return;
+            showConfirm(
+                'Delete Project',
+                `Are you sure you want to delete "${p.title}"? This action cannot be undone.`,
+                () => {
+                    Projects.delete(id);
+                    showToast('Project deleted successfully.', 'success');
+                    render();
+                },
+                { danger: true }
+            );
+        }
+
+        render();
+    </script>
+</body>
+
+</html>

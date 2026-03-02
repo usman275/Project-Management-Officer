@@ -1,0 +1,303 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Users — Project Management Admin</title>
+  <link rel="stylesheet" href="../styles/main.css" />
+  <link rel="stylesheet" href="../styles/student.css" />
+  <link rel="stylesheet" href="../styles/admin.css" />
+</head>
+
+<body>
+  <div class="portal-layout">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar admin-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">🏛️</div>
+        <div class="sidebar-logo-text">Project Management<span>Admin Panel</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <span class="sidebar-section-label">Dashboard</span>
+        <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">📊</span> Overview</a>
+        <span class="sidebar-section-label">Management</span>
+        <a href="users.html" class="sidebar-link active"><span class="nav-icon">👥</span> Manage Users</a>
+        <a href="projects.html" class="sidebar-link"><span class="nav-icon">📁</span> Manage Projects</a>
+        <a href="departments.html" class="sidebar-link"><span class="nav-icon">🏫</span> Departments &
+          Batches</a>
+        <a href="announcements.html" class="sidebar-link"><span class="nav-icon">📢</span> Announcements</a>
+        <span class="sidebar-section-label">System</span>
+        <a href="settings.html" class="sidebar-link"><span class="nav-icon">⚙️</span> Settings</a>
+        <a href="#" class="sidebar-link" onclick="Auth.adminLogout()"><span class="nav-icon">🚪</span>
+          Logout</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#b8770c,#f5b93e);color:#1a1000">AD
+          </div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+            <div class="sidebar-user-role" id="sidebar-user-role">Administrator</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="portal-main">
+      <div class="portal-topbar admin-topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menu-toggle">☰</button>
+          <div class="topbar-title">Manage Users</div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-accent btn-sm" onclick="showAddUserModal()">+ Add User</button>
+        </div>
+      </div>
+
+      <div class="portal-content">
+        <div class="filter-bar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search" placeholder="Search by name, email, Employee ID, department…" />
+          </div>
+          <select class="filter-select" id="status-filter">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <select class="filter-select" id="dept-filter">
+            <option value="">All Departments</option>
+          </select>
+        </div>
+
+        <div
+          style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);flex-wrap:wrap;gap:var(--space-3)">
+          <span id="result-count" style="font-size:.875rem;color:var(--gray-500)"></span>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Employee ID</th>
+                <th>Department</th>
+                <th>Batch</th>
+                <th>Status</th>
+                <th>Projects</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </main>
+  </div>
+  <div id="toast-container"></div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ui.js"></script>
+  <script>
+    if (!requireAdmin()) throw new Error('not admin');
+    initSidebar();
+    initTopbar('admin');
+
+    // Fill dept filter
+    const deptSel = document.getElementById('dept-filter');
+    Departments.all().forEach(d => {
+      const o = document.createElement('option'); o.value = d.name; o.textContent = d.name;
+      deptSel.appendChild(o);
+    });
+
+    let currentPage = 1;
+
+    function getFiltered() {
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const st = document.getElementById('status-filter').value;
+      const dept = document.getElementById('dept-filter').value;
+      let users = Users.all();
+      if (q) users = users.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.studentId.toLowerCase().includes(q) || u.department.toLowerCase().includes(q));
+      if (st) users = users.filter(u => u.status === st);
+      if (dept) users = users.filter(u => u.department === dept);
+      return users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    function render() {
+      const all = getFiltered();
+      const pager = paginate(all, currentPage, 10);
+      document.getElementById('result-count').textContent = `${all.length} student${all.length !== 1 ? 's' : ''} found`;
+
+      const tbody = document.getElementById('users-tbody');
+      if (!pager.items.length) {
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state" style="padding:40px 0">
+        <div class="empty-icon">👥</div><h3>No Users Found</h3>
+      </div></td></tr>`;
+      } else {
+        tbody.innerHTML = pager.items.map(u => {
+          const projectCount = Projects.byUser(u.id).length;
+          return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="avatar avatar-sm" style="background:${avatarColor(u.avatar)}">${escapeHtml(u.avatar || 'U')}</div>
+              <div>
+                <div style="font-weight:600;color:var(--white);font-size:.875rem">${escapeHtml(u.name)}</div>
+                <div style="font-size:.75rem;color:var(--gray-500)">${escapeHtml(u.email)}</div>
+              </div>
+            </div>
+          </td>
+          <td style="font-family:monospace;font-size:.8rem">${escapeHtml(u.studentId)}</td>
+          <td>${escapeHtml(u.department)}</td>
+          <td><span class="badge badge-primary">${escapeHtml(u.batch)}</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="status-dot ${u.status === 'active' ? 'active' : 'inactive'}"></span>
+              ${statusBadge(u.status)}
+            </div>
+          </td>
+          <td><span class="badge ${projectCount ? 'badge-primary' : 'badge-gray'}">${projectCount}</span></td>
+          <td style="font-size:.8rem;color:var(--gray-500)">${formatDate(u.createdAt)}</td>
+          <td>
+            <div class="action-cell">
+              <button class="action-btn view"   onclick="viewUser('${u.id}')" title="View Details">👁</button>
+              <button class="action-btn edit"   onclick="showEditUser('${u.id}')" title="Edit">✏️</button>
+              <button class="action-btn ${u.status === 'active' ? 'reject' : 'approve'}" onclick="toggleStatus('${u.id}')" title="${u.status === 'active' ? 'Deactivate' : 'Activate'}">${u.status === 'active' ? '🚫' : '✅'}</button>
+              <button class="action-btn delete" onclick="deleteUser('${u.id}')" title="Delete">🗑️</button>
+            </div>
+          </td>
+        </tr>`;
+        }).join('');
+      }
+      renderPagination(pager, 'pagination', pg => { currentPage = pg; render(); });
+    }
+
+    function viewUser(id) {
+      const u = Users.get(id);
+      const projects = Projects.byUser(id);
+      showModal(`👤 ${u.name}`, `
+      <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5)">
+        <div class="avatar avatar-lg" style="background:${avatarColor(u.avatar)}">${escapeHtml(u.avatar || 'U')}</div>
+        <div>
+          <h3 style="font-size:1.1rem">${escapeHtml(u.name)}</h3>
+          <p style="color:var(--gray-500);font-size:.875rem">${escapeHtml(u.email)}</p>
+          ${statusBadge(u.status)}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);font-size:.875rem">
+        ${[['Employee ID', u.studentId], ['Department', u.department], ['Batch', u.batch + ' Cohort'], ['Joined', formatDate(u.createdAt)], ['Projects', projects.length], ['Approved', projects.filter(p => p.status === 'approved').length]].map(([k, v]) => `
+          <div><div style="color:var(--gray-500);font-size:.75rem;margin-bottom:2px">${k}</div><div style="color:var(--white);font-weight:600">${escapeHtml(String(v))}</div></div>
+        `).join('')}
+      </div>
+      ${projects.length ? `<div class="divider"></div>
+        <h4 style="font-size:.875rem;margin-bottom:var(--space-3)">Projects (${projects.length})</h4>
+        ${projects.map(p => `<div style="padding:8px;background:rgba(255,255,255,.03);border-radius:6px;margin-bottom:6px;font-size:.8rem">
+          <strong style="color:var(--white)">${escapeHtml(truncate(p.title, 60))}</strong> ${statusBadge(p.status)}
+        </div>`).join('')}
+      ` : ''}
+    `, { size: 'lg' });
+    }
+
+    function showEditUser(id) {
+      const u = Users.get(id);
+      showModal(`✏️ Edit User: ${u.name}`, `
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="edit-name" value="${escapeHtml(u.name)}" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-control" id="edit-status">
+          <option value="active"   ${u.status === 'active' ? 'selected' : ''}>Active</option>
+          <option value="inactive" ${u.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+        </select>
+      </div>
+    `, {
+        footerHtml: `
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveEditUser('${id}')">Save Changes</button>
+      `
+      });
+    }
+
+    function saveEditUser(id) {
+      const name = document.getElementById('edit-name').value.trim();
+      const status = document.getElementById('edit-status').value;
+      if (!name) { showToast('Name is required.', 'error'); return; }
+      Users.update(id, { name, status, avatar: name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) });
+      showToast('User updated successfully.', 'success');
+      closeModal();
+      render();
+    }
+
+    function toggleStatus(id) {
+      Users.toggleStatus(id);
+      const u = Users.get(id);
+      showToast(`User ${u.status === 'active' ? 'activated' : 'deactivated'}.`, u.status === 'active' ? 'success' : 'warning');
+      render();
+    }
+
+    function deleteUser(id) {
+      const u = Users.get(id);
+      showConfirm('Delete User', `Delete "${u.name}" and all their projects? This cannot be undone.`,
+        () => { Users.delete(id); showToast('User deleted.', 'success'); render(); },
+        { danger: true }
+      );
+    }
+
+    function showAddUserModal() {
+      showModal('➕ Add New User', `
+      <div class="form-group"><label class="form-label">Full Name *</label><input type="text" class="form-control" id="add-name" placeholder="Student Name" /></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)">
+        <div class="form-group"><label class="form-label">Employee ID *</label><input type="text" class="form-control" id="add-sid" placeholder="CS-2024-001" /></div>
+        <div class="form-group"><label class="form-label">Password *</label><input type="password" class="form-control" id="add-pass" placeholder="Min 6 chars" /></div>
+      </div>
+      <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-control" id="add-email" placeholder="employee@company.com" /></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)">
+        <div class="form-group"><label class="form-label">Department *</label>
+          <select class="form-control" id="add-dept">
+            <option value="">Select…</option>
+            ${Departments.all().map(d => `<option value="${escapeHtml(d.name)}">${escapeHtml(d.name)}</option>`).join('')}
+          </select></div>
+        <div class="form-group"><label class="form-label">Batch *</label>
+          <select class="form-control" id="add-batch">
+            <option value="">Select…</option>
+            ${[...Batches.all()].reverse().map(b => `<option value="${b}">${b}</option>`).join('')}
+          </select></div>
+      </div>
+    `, {
+        footerHtml: `
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveAddUser()">Add User</button>
+      `
+      });
+    }
+
+    function saveAddUser() {
+      const name = document.getElementById('add-name').value.trim();
+      const sid = document.getElementById('add-sid').value.trim();
+      const email = document.getElementById('add-email').value.trim();
+      const dept = document.getElementById('add-dept').value;
+      const Cohort = document.getElementById('add-batch').value;
+      const pass = document.getElementById('add-pass').value;
+      if (!name || !sid || !email || !dept || !batch || !pass) { showToast('All fields are required.', 'error'); return; }
+      if (Users.byEmail(email)) { showToast('Email already registered.', 'error'); return; }
+      Users.create({ name, studentId: sid, email, department: dept, Cohort, password: btoa(pass), avatar: name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) });
+      showToast('User added successfully!', 'success');
+      closeModal();
+      render();
+    }
+
+    ['search', 'status-filter', 'dept-filter'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => { currentPage = 1; render(); });
+    });
+
+    render();
+  </script>
+</body>
+
+</html>

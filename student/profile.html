@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile — Project Management</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🎓</div>
+                <div class="sidebar-logo-text">Project Management<span>Employee Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Navigation</span>
+                <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">🏠</span> Dashboard</a>
+                <a href="browse.html" class="sidebar-link"><span class="nav-icon">🔍</span> Browse Projects</a>
+                <a href="upload.html" class="sidebar-link"><span class="nav-icon">📤</span> Upload Project</a>
+                <a href="my-projects.html" class="sidebar-link"><span class="nav-icon">📁</span> My
+                    Projects</a>
+                <span class="sidebar-section-label">Account</span>
+                <a href="profile.html" class="sidebar-link active"><span class="nav-icon">👤</span> My
+                    Profile</a>
+                <a href="#" class="sidebar-link" onclick="Auth.logout()"><span class="nav-icon">🚪</span> Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm" id="topbar-avatar"
+                        style="background:linear-gradient(135deg,#3b52d4,#6b7ff5);cursor:pointer"
+                        onclick="location.href='profile.html'" title="View Profile">U</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Employee</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div class="topbar-title">My Profile</div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div class="container-sm" style="margin:0">
+
+                    <!-- Profile header -->
+                    <div class="profile-header">
+                        <div class="avatar avatar-xl" id="profile-avatar"></div>
+                        <div>
+                            <h1 style="font-size:1.6rem;font-weight:800;margin-bottom:4px" id="profile-name"></h1>
+                            <div style="color:var(--gray-500);font-size:.9rem" id="profile-subtext"></div>
+                            <div style="display:flex;gap:var(--space-3);margin-top:var(--space-3);flex-wrap:wrap"
+                                id="profile-badges"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2" style="gap:var(--space-5);align-items:start">
+                        <!-- Edit Info -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 style="font-size:.95rem;font-weight:700">✏️ Edit Information</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="profile-form" novalidate>
+                                    <div class="form-group">
+                                        <label class="form-label">Full Name *</label>
+                                        <input type="text" id="pf-name" class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Employee ID</label>
+                                        <input type="text" id="pf-sid" class="form-control" disabled
+                                            style="opacity:.6" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" id="pf-email" class="form-control" disabled
+                                            style="opacity:.6" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Department</label>
+                                        <input type="text" id="pf-dept" class="form-control" disabled
+                                            style="opacity:.6" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Year</label>
+                                        <input type="text" id="pf-batch" class="form-control" disabled
+                                            style="opacity:.6" />
+                                    </div>
+                                    <div id="pf-error" class="form-error"
+                                        style="display:none;margin-bottom:var(--space-4)"></div>
+                                    <button type="submit" class="btn btn-primary btn-full" id="pf-save-btn">Save
+                                        Changes</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Change Password -->
+                        <div>
+                            <div class="card" style="margin-bottom:var(--space-5)">
+                                <div class="card-header">
+                                    <h3 style="font-size:.95rem;font-weight:700">🔐 Change Password</h3>
+                                </div>
+                                <div class="card-body">
+                                    <form id="pass-form" novalidate>
+                                        <div class="form-group">
+                                            <label class="form-label">Current Password *</label>
+                                            <input type="password" id="current-pass" class="form-control"
+                                                placeholder="Enter current password" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">New Password *</label>
+                                            <input type="password" id="new-pass" class="form-control"
+                                                placeholder="Minimum 6 characters" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Confirm New Password *</label>
+                                            <input type="password" id="confirm-pass" class="form-control"
+                                                placeholder="Repeat new password" />
+                                        </div>
+                                        <div id="pass-error" class="form-error"
+                                            style="display:none;margin-bottom:var(--space-4)"></div>
+                                        <button type="submit" class="btn btn-outline btn-full" id="pass-save-btn">Update
+                                            Password</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- My Stats -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 style="font-size:.95rem;font-weight:700">📊 My Statistics</h3>
+                                </div>
+                                <div class="card-body" style="display:flex;flex-direction:column;gap:var(--space-4)"
+                                    id="my-stats"></div>
+                            </div>
+
+                            <!-- Danger Zone -->
+                            <div class="card" style="margin-top:var(--space-5);border-color:rgba(239,68,68,.2)">
+                                <div class="card-body" style="text-align:center">
+                                    <h3 style="font-size:.95rem;color:var(--error-500);margin-bottom:var(--space-2)">⚠️
+                                        Danger Zone</h3>
+                                    <p style="font-size:.8rem;color:var(--gray-500);margin-bottom:var(--space-4)">
+                                        Permanently log out of all sessions.</p>
+                                    <button class="btn btn-danger btn-full" onclick="Auth.logout()">🚪 Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        if (!requireStudent()) throw new Error('not logged in');
+        initSidebar();
+        initTopbar('employee');
+
+        const user = Session.currentUser();
+
+        // Profile header
+        const av = document.getElementById('profile-avatar');
+        av.textContent = user.avatar;
+        av.style.background = avatarColor(user.avatar);
+
+        document.getElementById('profile-name').textContent = user.name;
+        document.getElementById('profile-subtext').textContent = user.email;
+        document.getElementById('profile-badges').innerHTML = `
+    <span class="badge badge-primary">${escapeHtml(user.department)}</span>
+    <span class="badge badge-accent">${escapeHtml(user.batch)} Cohort</span>
+    <span class="badge ${user.status === 'active' ? 'badge-success' : 'badge-gray'}">${user.status}</span>
+  `;
+
+        // Fill form
+        document.getElementById('pf-name').value = user.name;
+        document.getElementById('pf-sid').value = user.employeeId;
+        document.getElementById('pf-email').value = user.email;
+        document.getElementById('pf-dept').value = user.department;
+        document.getElementById('pf-batch').value = user.batch;
+
+        // Stats
+        const myProjects = Projects.byUser(user.id);
+        const totalViews = myProjects.reduce((s, p) => s + (p.views || 0), 0);
+        const totalLikes = myProjects.reduce((s, p) => s + (p.likes || 0), 0);
+        document.getElementById('my-stats').innerHTML = [
+            ['📁', 'Projects Uploaded', myProjects.length],
+            ['✅', 'Approved Projects', myProjects.filter(p => p.status === 'approved').length],
+            ['⏳', 'Pending Review', myProjects.filter(p => p.status === 'pending').length],
+            ['👁', 'Total Views', totalViews],
+            ['❤️', 'Total Likes', totalLikes],
+            ['📅', 'Member Since', formatDate(user.createdAt)],
+        ].map(([icon, label, val]) => `
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:.875rem;color:var(--gray-500)">${icon} ${label}</span>
+      <span style="font-size:.9rem;font-weight:700;color:var(--white)">${val}</span>
+    </div>
+  `).join('');
+
+        // Profile save
+        document.getElementById('profile-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('pf-name').value.trim();
+            const err = document.getElementById('pf-error');
+            err.style.display = 'none';
+            if (name.length < 2) { err.textContent = 'Name must be at least 2 characters.'; err.style.display = 'flex'; return; }
+            const btn = document.getElementById('pf-save-btn');
+            setLoading(btn, true);
+            setTimeout(() => {
+                Users.update(user.id, { name, avatar: name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) });
+                showToast('Profile updated successfully!', 'success');
+                setLoading(btn, false);
+                setTimeout(() => location.reload(), 500);
+            }, 600);
+        });
+
+        // Password change
+        document.getElementById('pass-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const cur = document.getElementById('current-pass').value;
+            const nw = document.getElementById('new-pass').value;
+            const con = document.getElementById('confirm-pass').value;
+            const err = document.getElementById('pass-error');
+            err.style.display = 'none';
+            if (user.password !== btoa(cur)) { err.textContent = 'Current password is incorrect.'; err.style.display = 'flex'; return; }
+            if (nw.length < 6) { err.textContent = 'New password must be at least 6 characters.'; err.style.display = 'flex'; return; }
+            if (nw !== con) { err.textContent = 'Passwords do not match.'; err.style.display = 'flex'; return; }
+            const btn = document.getElementById('pass-save-btn');
+            setLoading(btn, true);
+            setTimeout(() => {
+                Users.update(user.id, { password: btoa(nw) });
+                showToast('Password changed successfully!', 'success');
+                document.getElementById('pass-form').reset();
+                setLoading(btn, false);
+            }, 600);
+        });
+    </script>
+</body>
+
+</html>

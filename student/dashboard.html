@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Project Management</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <!-- Sidebar overlay -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- ══ SIDEBAR ══ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🎓</div>
+                <div class="sidebar-logo-text">Project Management<span>Employee Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Navigation</span>
+                <a href="dashboard.html" class="sidebar-link active"><span class="nav-icon">🏠</span>
+                    Dashboard</a>
+                <a href="browse.html" class="sidebar-link"><span class="nav-icon">🔍</span> Browse Projects</a>
+                <a href="upload.html" class="sidebar-link"><span class="nav-icon">📤</span> Upload Project</a>
+                <a href="my-projects.html" class="sidebar-link"><span class="nav-icon">📁</span> My
+                    Projects</a>
+
+                <span class="sidebar-section-label">Account</span>
+                <a href="profile.html" class="sidebar-link"><span class="nav-icon">👤</span> My Profile</a>
+                <a href="#" class="sidebar-link" onclick="Auth.logout()"><span class="nav-icon">🚪</span> Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm" id="sidebar-avatar"
+                        style="background:linear-gradient(135deg,#3b52d4,#6b7ff5)">U</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Employee</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ══ MAIN ══ -->
+        <main class="portal-main">
+            <div class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div>
+                        <div class="topbar-title">Dashboard</div>
+                        <div class="topbar-subtitle">Welcome back!</div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="notif-btn" id="notif-btn" title="Announcements">
+                        🔔<span class="notif-dot"></span>
+                    </div>
+                    <div class="avatar avatar-sm" id="topbar-avatar"
+                        style="background:linear-gradient(135deg,#3b52d4,#6b7ff5);cursor:pointer"
+                        onclick="location.href='profile.html'" title="View Profile">U</div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <!-- Announcement banner -->
+                <div id="ann-banner" style="margin-bottom:var(--space-5)"></div>
+
+                <!-- Welcome message -->
+                <div class="page-header">
+                    <h1>Good day, <span id="user-first-name" class="gradient-text">Student</span>! 👋</h1>
+                    <p>Here's an overview of your project activity and the latest projects.</p>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid-stats" style="margin-bottom:var(--space-6)">
+                    <div class="stat-card blue">
+                        <div class="stat-icon blue">📚</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-total">—</div>
+                            <div class="stat-label">Total Projects</div>
+                        </div>
+                    </div>
+                    <div class="stat-card gold">
+                        <div class="stat-icon gold">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-approved">—</div>
+                            <div class="stat-label">Approved Projects</div>
+                        </div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon purple">📁</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-mine">—</div>
+                            <div class="stat-label">My Uploads</div>
+                        </div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon green">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-students">—</div>
+                            <div class="stat-label">Registered Employees</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="align-items:start;gap:var(--space-6)">
+                    <!-- Recent Projects -->
+                    <div>
+                        <div class="section-header">
+                            <h2 class="section-title">Latest Projects</h2>
+                            <a href="browse.html" class="btn btn-ghost btn-sm">View All →</a>
+                        </div>
+                        <div id="recent-projects-list">
+                            <div class="skeleton" style="height:90px;border-radius:var(--radius-md);margin-bottom:12px">
+                            </div>
+                            <div class="skeleton" style="height:90px;border-radius:var(--radius-md);margin-bottom:12px">
+                            </div>
+                            <div class="skeleton" style="height:90px;border-radius:var(--radius-md)"></div>
+                        </div>
+                    </div>
+
+                    <!-- Announcements -->
+                    <div>
+                        <div class="section-header">
+                            <h2 class="section-title">Announcements</h2>
+                        </div>
+                        <div id="announcements-list"></div>
+
+                        <!-- Quick links -->
+                        <div style="margin-top:var(--space-6)">
+                            <div class="section-header">
+                                <h2 class="section-title">Quick Actions</h2>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+                                <a href="upload.html" class="btn btn-primary btn-full">📤 Upload New
+                                    Project</a>
+                                <a href="browse.html" class="btn btn-outline btn-full">🔍 Browse All
+                                    Projects</a>
+                                <a href="my-projects.html" class="btn btn-ghost btn-full">📁 View My
+                                    Projects</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        if (!requireStudent()) throw new Error('not logged in');
+        initSidebar();
+        initTopbar('employee');
+
+        const user = Session.currentUser();
+        document.getElementById('user-first-name').textContent = user.name.split(' ')[0];
+        const ta = document.getElementById('topbar-avatar');
+        ta.textContent = user.avatar; ta.style.background = avatarColor(user.avatar);
+
+        // Stats
+        const stats = Stats.get();
+        const myProjects = Projects.byUser(user.id);
+        document.getElementById('stat-total').textContent = stats.totalProjects;
+        document.getElementById('stat-approved').textContent = stats.approved;
+        document.getElementById('stat-mine').textContent = myProjects.length;
+        document.getElementById('stat-students').textContent = stats.totalUsers;
+
+        // Recent projects
+        const recent = Projects.approved().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 4);
+        document.getElementById('recent-projects-list').innerHTML = recent.length ? recent.map(p => `
+    <div onclick="location.href='project.html?id=${p.id}'" style="
+      display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+      border-radius:var(--radius-md);margin-bottom:10px;cursor:pointer;
+      transition:all var(--transition-fast)"
+      onmouseover="this.style.borderColor='rgba(107,127,245,.3)'"
+      onmouseout="this.style.borderColor='rgba(255,255,255,.07)'">
+      <div style="width:42px;height:42px;background:linear-gradient(135deg,rgba(34,51,168,.3),rgba(107,127,245,.15));
+        border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">📄</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.875rem;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(p.title)}</div>
+        <div style="font-size:.75rem;color:var(--gray-500);margin-top:2px">${escapeHtml(p.department)} · ${p.batch} Cohort</div>
+      </div>
+      ${statusBadge(p.status)}
+    </div>
+  `).join('') : '<div class="empty-state" style="padding:40px 0"><div class="empty-icon">📁</div><h3>No Projects Yet</h3></div>';
+
+        // Announcements
+        const anns = Announcements.recent(3);
+        document.getElementById('announcements-list').innerHTML = anns.length ? anns.map(a => `
+    <div style="padding:var(--space-4);background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+      border-radius:var(--radius-md);margin-bottom:10px;border-left:3px solid ${a.pinned ? 'var(--accent-400)' : 'var(--primary-400)'}">
+      <div style="font-weight:700;font-size:.875rem;color:var(--white);margin-bottom:5px">${escapeHtml(a.title)}</div>
+      <div style="font-size:.8rem;color:var(--gray-500);line-height:1.5">${escapeHtml(truncate(a.body, 120))}</div>
+      <div style="font-size:.72rem;color:var(--gray-600);margin-top:6px">${timeAgo(a.createdAt)}</div>
+    </div>
+  `).join('') : '<p style="color:var(--gray-600);font-size:.875rem">No announcements.</p>';
+
+        // Banner
+        renderAnnouncementBanner('ann-banner');
+
+        // Notif btn
+        document.getElementById('notif-btn').addEventListener('click', () => {
+            showModal('📢 Announcements', Announcements.recent(5).map(a => `
+      <div style="padding:var(--space-4);border-bottom:1px solid rgba(255,255,255,.05)">
+        <div style="font-weight:700;color:var(--white);margin-bottom:6px">${escapeHtml(a.title)} ${a.pinned ? '<span class="badge badge-accent">Pinned</span>' : ''}</div>
+        <div style="font-size:.85rem;color:var(--gray-400);line-height:1.6">${escapeHtml(a.body)}</div>
+        <div style="font-size:.72rem;color:var(--gray-600);margin-top:8px">${formatDateTime(a.createdAt)}</div>
+      </div>
+    `).join('') || '<p style="color:var(--gray-500)">No announcements.</p>', { size: 'lg' });
+        });
+    </script>
+</body>
+
+</html>

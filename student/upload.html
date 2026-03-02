@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Project — Project Management</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🎓</div>
+                <div class="sidebar-logo-text">Project Management<span>Employee Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Navigation</span>
+                <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">🏠</span> Dashboard</a>
+                <a href="browse.html" class="sidebar-link"><span class="nav-icon">🔍</span> Browse Projects</a>
+                <a href="upload.html" class="sidebar-link active"><span class="nav-icon">📤</span> Upload Project</a>
+                <a href="my-projects.html" class="sidebar-link"><span class="nav-icon">📁</span> My Projects</a>
+
+                <span class="sidebar-section-label">Account</span>
+                <a href="profile.html" class="sidebar-link"><span class="nav-icon">👤</span> My Profile</a>
+                <a href="#" class="sidebar-link" onclick="Auth.logout()"><span class="nav-icon">🚪</span> Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm" id="topbar-avatar"
+                        style="background:linear-gradient(135deg,#3b52d4,#6b7ff5);cursor:pointer"
+                        onclick="location.href='profile.html'" title="View Profile">U</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Employee</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div>
+                        <div class="topbar-title">Upload Project Project</div>
+                        <div class="topbar-subtitle">Share your final year project with the community</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div class="upload-form">
+                    <div
+                        style="background:rgba(59,82,212,.1);border:1px solid rgba(59,82,212,.2);border-radius:var(--radius-md);padding:var(--space-4);margin-bottom:var(--space-5);font-size:.875rem;color:var(--primary-200)">
+                        ℹ️ Your project will be reviewed by admin before it becomes publicly visible. Please ensure all
+                        information is accurate.
+                    </div>
+
+                    <form id="upload-form" novalidate>
+
+                        <!-- Section 1: Basic Info -->
+                        <div class="upload-section">
+                            <div class="upload-section-title">📋 Project Information</div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="title">Project Title *</label>
+                                <input type="text" id="title" class="form-control"
+                                    placeholder="e.g., AI-Powered Medical Diagnosis System" maxlength="200" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="abstract">Abstract / Description * <span
+                                        style="font-weight:400;color:var(--gray-600)">(100–2000
+                                        characters)</span></label>
+                                <textarea id="abstract" class="form-control" rows="6"
+                                    placeholder="Describe your project: the problem it solves, approach taken, technologies used, and key outcomes…"
+                                    minlength="100" maxlength="2000" required></textarea>
+                                <div style="font-size:.75rem;color:var(--gray-600);margin-top:4px"><span
+                                        id="abstract-count">0</span>/2000 characters</div>
+                            </div>
+
+                            <div class="grid-2" style="gap:var(--space-4)">
+                                <div class="form-group">
+                                    <label class="form-label" for="supervisor">Supervisor Name *</label>
+                                    <div class="input-group">
+                                        <span class="input-icon">👨‍🏫</span>
+                                        <input type="text" id="supervisor" class="form-control"
+                                            placeholder="Dr. Muhammad Tariq" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="github">GitHub / Project URL <span
+                                            style="font-weight:400;color:var(--gray-600)">(optional)</span></label>
+                                    <div class="input-group">
+                                        <span class="input-icon">🔗</span>
+                                        <input type="url" id="github" class="form-control"
+                                            placeholder="https://github.com/username/repo" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Academic Details -->
+                        <div class="upload-section">
+                            <div class="upload-section-title">🎓 Academic Details</div>
+                            <div class="grid-2" style="gap:var(--space-4)">
+                                <div class="form-group">
+                                    <label class="form-label" for="department">Department *</label>
+                                    <select id="department" class="form-control" required>
+                                        <option value="">Select Department…</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="batch">Year *</label>
+                                    <select id="batch" class="form-control" required>
+                                        <option value="">Select Year…</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="tags-wrapper">Tags / Keywords <span
+                                        style="font-weight:400;color:var(--gray-600)">(press Enter to add, max
+                                        8)</span></label>
+                                <div class="tags-input-wrapper" id="tags-wrapper"></div>
+                                <input type="hidden" id="tags-data" />
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Documentation -->
+                        <div class="upload-section">
+                            <div class="upload-section-title">📄 Project Documentation</div>
+                            <div class="form-group">
+                                <label class="form-label">Upload PDF Documentation <span
+                                        style="font-weight:400;color:var(--gray-600)">(optional, max
+                                        50MB)</span></label>
+                                <div class="file-upload-zone" id="pdf-zone">
+                                    <input type="file" id="pdf-file" accept=".pdf" />
+                                    <div class="file-upload-icon">📄</div>
+                                    <div class="file-upload-text">Click to select or drag & drop your PDF</div>
+                                    <div class="file-upload-hint">Supports PDF files up to 50MB</div>
+                                </div>
+                                <div id="file-selected-info" style="display:none" class="file-selected">
+                                    <span>📄</span>
+                                    <div>
+                                        <div id="file-name" style="font-weight:600"></div>
+                                        <div id="file-size" style="font-size:.75rem;opacity:.7"></div>
+                                    </div>
+                                    <button type="button" onclick="clearFile()"
+                                        style="margin-left:auto;background:none;border:none;color:var(--error-500);cursor:pointer;font-size:1rem">✕</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="form-error" class="form-error" style="margin-bottom:var(--space-4);display:none"></div>
+
+                        <div style="display:flex;gap:var(--space-3)">
+                            <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">🚀 Submit Project
+                                Project</button>
+                            <button type="button" class="btn btn-ghost btn-lg" onclick="history.back()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        if (!requireStudent()) throw new Error('not logged in');
+        initSidebar();
+        initTopbar('employee');
+
+        const user = Session.currentUser();
+        let pdfData = null, pdfName = null;
+
+        // Populate dropdowns
+        const deptSel = document.getElementById('department');
+        Departments.all().forEach(d => {
+            const o = document.createElement('option'); o.value = d.name; o.textContent = d.name;
+            deptSel.appendChild(o);
+        });
+        // Pre-fill user's department
+        if (user.department) deptSel.value = user.department;
+
+        const batchSel = document.getElementById('batch');
+        [...Batches.all()].reverse().forEach(b => {
+            const o = document.createElement('option'); o.value = b; o.textContent = b + ' Cohort';
+            batchSel.appendChild(o);
+        });
+        if (user.batch) batchSel.value = user.batch;
+
+        // Tags input
+        const tagsCtl = initTagsInput('tags-wrapper', 'tags-data');
+
+        // Abstract counter
+        document.getElementById('abstract').addEventListener('input', function () {
+            document.getElementById('abstract-count').textContent = this.value.length;
+        });
+
+        // File handling
+        document.getElementById('pdf-file').addEventListener('change', function () {
+            handleFile(this.files[0]);
+        });
+        initFileZone('pdf-zone', handleFile);
+
+        function handleFile(file) {
+            if (!file) return;
+            if (file.type !== 'application/pdf') { showToast('Please upload a PDF file only.', 'error'); return; }
+            if (file.size > 50 * 1024 * 1024) { showToast('File is too large. Maximum 50MB.', 'error'); return; }
+            pdfName = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                pdfData = e.target.result;
+                document.getElementById('file-selected-info').style.display = 'flex';
+                document.getElementById('file-name').textContent = file.name;
+                document.getElementById('file-size').textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearFile() {
+            pdfData = null; pdfName = null;
+            document.getElementById('pdf-file').value = '';
+            document.getElementById('file-selected-info').style.display = 'none';
+        }
+
+        document.getElementById('upload-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value.trim();
+            const abstract = document.getElementById('abstract').value.trim();
+            const supervisor = document.getElementById('supervisor').value.trim();
+            const department = document.getElementById('department').value;
+            const Cohort = document.getElementById('batch').value;
+            const github = document.getElementById('github').value.trim();
+            const errEl = document.getElementById('form-error');
+            const btn = document.getElementById('submit-btn');
+
+            errEl.style.display = 'none';
+
+            const v = validate([
+                { field: 'title', value: title, label: 'Project title', required: true, minLen: 10 },
+                { field: 'abstract', value: abstract, label: 'Abstract', required: true, minLen: 100 },
+                { field: 'supervisor', value: supervisor, label: 'Supervisor name', required: true },
+                { field: 'department', value: department, label: 'Department', required: true },
+                { field: 'batch', value: Cohort, label: 'Year', required: true },
+            ]);
+            if (!v.ok) { errEl.textContent = v.error; errEl.style.display = 'flex'; return; }
+
+            const tags = JSON.parse(document.getElementById('tags-data').value || '[]');
+
+            setLoading(btn, true, 'Submitting project…');
+            setTimeout(() => {
+                const result = Projects.create({
+                    title, abstract, supervisor, department, Cohort, tags,
+                    githubUrl: github,
+                    authorId: user.id,
+                    authorName: user.name,
+                    pdfName, pdfData,
+                });
+                if (result.ok) {
+                    showToast('Project uploaded successfully! It will be visible after admin approval.', 'success');
+                    setTimeout(() => location.href = 'my-projects.html', 1500);
+                } else {
+                    showToast(result.error, 'error');
+                }
+                setLoading(btn, false, '🚀 Submit Project Project');
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

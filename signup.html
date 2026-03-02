@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account — Project Management</title>
+    <meta name="description"
+        content="Create your Project Management employee account and start managing and exploring projects." />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/auth.css" />
+</head>
+
+<body class="auth-page">
+    <div class="auth-bg"></div>
+    <div class="auth-bg-accent"></div>
+    <div class="auth-grid"></div>
+
+    <div class="auth-card auth-card-wide">
+        <div class="auth-logo">
+            <div class="auth-logo-icon" style="width:52px;height:52px;font-size:1.4rem">📊</div>
+            <h1>Project Management</h1>
+            <p>Business Project Management System</p>
+        </div>
+
+        <div class="auth-heading">
+            <h2>Create Account</h2>
+            <p>Join your team on the platform</p>
+        </div>
+
+        <form id="signup-form" novalidate>
+            <div class="grid-2" style="gap:var(--space-4)">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name *</label>
+                    <div class="input-group">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="name" class="form-control" placeholder="Muhammad Ali Khan" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="studentId">Employee ID *</label>
+                    <div class="input-group">
+                        <span class="input-icon">🪻</span>
+                        <input type="text" id="studentId" class="form-control" placeholder="ENG-2024-001" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address *</label>
+                <div class="input-group">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="email" class="form-control" placeholder="employee@company.com"
+                        autocomplete="email" required />
+                </div>
+            </div>
+
+            <div class="grid-2" style="gap:var(--space-4)">
+                <div class="form-group">
+                    <label class="form-label" for="department">Department / Team *</label>
+                    <select id="department" class="form-control" required>
+                        <option value="">Select Department…</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="batch">Year *</label>
+                    <select id="batch" class="form-control" required>
+                        <option value="">Select Year…</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password *</label>
+                <div class="input-group has-right">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" class="form-control" placeholder="Minimum 6 characters"
+                        autocomplete="new-password" required />
+                    <span class="input-icon-right" onclick="togglePass('password',this)">👁️</span>
+                </div>
+                <div class="password-strength" id="pass-strength" style="display:none">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <span class="strength-label" id="strength-label"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirm Password *</label>
+                <div class="input-group has-right">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Repeat your password"
+                        autocomplete="new-password" required />
+                    <span class="input-icon-right" onclick="togglePass('confirmPassword',this)">👁️</span>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--space-5)">
+                <label class="checkbox-group">
+                    <input type="checkbox" id="agree" required />
+                    I agree that my projects will be visible to other employees after admin approval.
+                </label>
+            </div>
+
+            <div id="form-error" class="form-error" style="margin-bottom:var(--space-4);display:none"></div>
+
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="signup-btn">🚀 Create Account</button>
+        </form>
+
+        <div class="auth-footer-link" style="margin-top:var(--space-5)">
+            Already have an account? <a href="login.html">Sign in →</a>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        redirectIfLoggedIn();
+
+        // Populate dropdowns
+        const deptSel = document.getElementById('department');
+        Departments.all().forEach(d => {
+            const o = document.createElement('option'); o.value = d.name; o.textContent = d.name;
+            deptSel.appendChild(o);
+        });
+        const batchSel = document.getElementById('batch');
+        [...Batches.all()].reverse().forEach(b => {
+            const o = document.createElement('option'); o.value = b; o.textContent = b + ' Cohort';
+            batchSel.appendChild(o);
+        });
+
+        function togglePass(id, icon) {
+            const inp = document.getElementById(id);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            icon.textContent = inp.type === 'password' ? '👁️' : '🙈';
+        }
+
+        // Password strength
+        document.getElementById('password').addEventListener('input', function () {
+            const v = this.value;
+            const strEl = document.getElementById('pass-strength');
+            const fill = document.getElementById('strength-fill');
+            const label = document.getElementById('strength-label');
+            if (!v) { strEl.style.display = 'none'; return; }
+            strEl.style.display = 'block';
+            let score = 0;
+            if (v.length >= 6) score++;
+            if (v.length >= 10) score++;
+            if (/[A-Z]/.test(v) && /[0-9]/.test(v)) score++;
+            if (/[^A-Za-z0-9]/.test(v)) score++;
+            const levels = ['', 'weak', 'fair', 'good', 'strong'];
+            const names = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+            const cls = levels[score] || 'weak';
+            fill.className = 'strength-fill ' + cls;
+            label.className = 'strength-label ' + cls;
+            label.textContent = 'Password strength: ' + (names[score] || 'Weak');
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const studentId = document.getElementById('studentId').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const dept = document.getElementById('department').value;
+            const batch = document.getElementById('batch').value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const agree = document.getElementById('agree').checked;
+            const errEl = document.getElementById('form-error');
+            const btn = document.getElementById('signup-btn');
+
+            errEl.style.display = 'none';
+
+            const v = validate([
+                { field: 'name', value: name, label: 'Full name', required: true, minLen: 2 },
+                { field: 'studentId', value: studentId, label: 'Employee ID', required: true },
+                { field: 'email', value: email, label: 'Email', required: true, pattern: /^[^@\s]+@[^@\s]+\.[^@\s]+$/, patternMsg: 'Enter a valid email address.' },
+                { field: 'dept', value: dept, label: 'Department', required: true },
+                { field: 'batch', value: batch, label: 'Batch year', required: true },
+                { field: 'password', value: password, label: 'Password', required: true, minLen: 6 },
+            ]);
+            if (!v.ok) { errEl.textContent = v.error; errEl.style.display = 'flex'; return; }
+            if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'flex'; return; }
+            if (!agree) { errEl.textContent = 'Please accept the terms to continue.'; errEl.style.display = 'flex'; return; }
+
+            setLoading(btn, true, 'Creating account…');
+            setTimeout(() => {
+                const result = Auth.signup({ name, employeeId: studentId, email, department: dept, batch, password });
+                if (result.ok) {
+                    showToast('Account created successfully! Welcome to Project Management!', 'success');
+                    setTimeout(() => location.href = 'student/dashboard.html', 700);
+                } else {
+                    errEl.textContent = result.error;
+                    errEl.style.display = 'flex';
+                    setLoading(btn, false);
+                }
+            }, 900);
+        });
+    </script>
+</body>
+
+</html>

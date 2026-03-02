@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings — Project Management Admin</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+    <link rel="stylesheet" href="../styles/admin.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🏛️</div>
+                <div class="sidebar-logo-text">Project Management<span>Admin Panel</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Dashboard</span>
+                <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">📊</span> Overview</a>
+                <span class="sidebar-section-label">Management</span>
+                <a href="users.html" class="sidebar-link"><span class="nav-icon">👥</span> Manage Users</a>
+                <a href="projects.html" class="sidebar-link"><span class="nav-icon">📁</span> Manage Projects</a>
+                <a href="departments.html" class="sidebar-link"><span class="nav-icon">🏫</span> Departments &
+                    Batches</a>
+                <a href="announcements.html" class="sidebar-link"><span class="nav-icon">📢</span>
+                    Announcements</a>
+                <span class="sidebar-section-label">System</span>
+                <a href="settings.html" class="sidebar-link active"><span class="nav-icon">⚙️</span> Settings</a>
+                <a href="#" class="sidebar-link" onclick="Auth.adminLogout()"><span class="nav-icon">🚪</span>
+                    Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm"
+                        style="background:linear-gradient(135deg,#b8770c,#f5b93e);color:#1a1000">AD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar admin-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div class="topbar-title">System Settings</div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div style="max-width:720px">
+
+                    <!-- Admin Password -->
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <span style="font-size:1.1rem">🔐</span>
+                            <h3>Change Admin Password</h3>
+                        </div>
+                        <div class="settings-section-body">
+                            <form id="admin-pass-form" novalidate>
+                                <div class="form-group">
+                                    <label class="form-label">Current Password *</label>
+                                    <input type="password" id="cur-pass" class="form-control"
+                                        placeholder="Current admin password" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">New Password *</label>
+                                    <input type="password" id="new-pass" class="form-control"
+                                        placeholder="New password (min 6 chars)" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirm New Password *</label>
+                                    <input type="password" id="con-pass" class="form-control"
+                                        placeholder="Repeat new password" />
+                                </div>
+                                <div id="pass-error" class="form-error"
+                                    style="display:none;margin-bottom:var(--space-4)"></div>
+                                <button type="submit" class="btn btn-primary" id="pass-btn">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Data Export -->
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <span style="font-size:1.1rem">📤</span>
+                            <h3>Export Data</h3>
+                        </div>
+                        <div class="settings-section-body">
+                            <p style="font-size:.875rem;color:var(--gray-500);margin-bottom:var(--space-5)">Download all
+                                platform data as JSON files for backup or analysis.</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:var(--space-3)">
+                                <button class="btn btn-outline btn-sm" onclick="exportData('users')">📥 Export
+                                    Users</button>
+                                <button class="btn btn-outline btn-sm" onclick="exportData('projects')">📥 Export
+                                    Projects</button>
+                                <button class="btn btn-outline btn-sm" onclick="exportData('all')">📥 Export All
+                                    Data</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Platform Stats Summary -->
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <span style="font-size:1.1rem">📊</span>
+                            <h3>Platform Summary</h3>
+                        </div>
+                        <div class="settings-section-body">
+                            <div id="platform-stats"
+                                style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)"></div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigation -->
+                    <div class="settings-section">
+                        <div class="settings-section-header">
+                            <span style="font-size:1.1rem">🔗</span>
+                            <h3>Quick Navigation</h3>
+                        </div>
+                        <div class="settings-section-body">
+                            <div style="display:flex;flex-wrap:wrap;gap:var(--space-3)">
+                                <a href="../index.html" target="_blank" class="btn btn-ghost btn-sm">🌐 View Public
+                                    Site</a>
+                                <a href="users.html" class="btn btn-ghost btn-sm">👥 Manage Users</a>
+                                <a href="projects.html" class="btn btn-ghost btn-sm">📁 Review Projects</a>
+                                <a href="announcements.html" class="btn btn-ghost btn-sm">📢 Post Announcement</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="settings-section danger">
+                        <div class="settings-section-header">
+                            <span style="font-size:1.1rem">⚠️</span>
+                            <h3>Danger Zone</h3>
+                        </div>
+                        <div class="settings-section-body">
+                            <p style="font-size:.875rem;color:var(--gray-500);margin-bottom:var(--space-5)">These
+                                actions are irreversible. Proceed with extreme caution.</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:var(--space-3)">
+                                <button class="btn btn-danger btn-sm" onclick="clearAllProjects()">🗑️ Clear All
+                                    Projects</button>
+                                <button class="btn btn-danger btn-sm" onclick="clearAllUsers()">🗑️ Clear All
+                                    Students</button>
+                                <button class="btn btn-danger btn-sm" onclick="resetAll()">🔄 Factory Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logout -->
+                    <div style="margin-top:var(--space-5)">
+                        <button class="btn btn-ghost btn-full" onclick="Auth.adminLogout()">🚪 Logout from
+                            Admin</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        if (!requireAdmin()) throw new Error('not admin');
+        initSidebar();
+        initTopbar('admin');
+
+        // Platform stats
+        const stats = Stats.get();
+        document.getElementById('platform-stats').innerHTML = [
+            ['Total Students', stats.totalUsers],
+            ['Active Students', stats.activeUsers],
+            ['Total Projects', stats.totalProjects],
+            ['Approved', stats.approved],
+            ['Pending Review', stats.pending],
+            ['Departments', stats.departments],
+            ['Total Views', stats.totalViews],
+            ['Total Likes', stats.totalLikes],
+        ].map(([k, v]) => `
+    <div style="padding:var(--space-3);background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-sm)">
+      <div style="font-size:.75rem;color:var(--gray-600);margin-bottom:4px">${k}</div>
+      <div style="font-size:1.1rem;font-weight:800;color:var(--white)">${v}</div>
+    </div>
+  `).join('');
+
+        // Admin password change
+        document.getElementById('admin-pass-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const cur = document.getElementById('cur-pass').value;
+            const nw = document.getElementById('new-pass').value;
+            const con = document.getElementById('con-pass').value;
+            const err = document.getElementById('pass-error');
+            err.style.display = 'none';
+
+            const creds = Admin.credentials();
+            if (creds.password !== cur) { err.textContent = 'Current password is incorrect.'; err.style.display = 'flex'; return; }
+            if (nw.length < 6) { err.textContent = 'New password must be at least 6 characters.'; err.style.display = 'flex'; return; }
+            if (nw !== con) { err.textContent = 'Passwords do not match.'; err.style.display = 'flex'; return; }
+
+            const btn = document.getElementById('pass-btn');
+            setLoading(btn, true);
+            setTimeout(() => {
+                Admin.updatePassword(nw);
+                showToast('Admin password updated successfully!', 'success');
+                document.getElementById('admin-pass-form').reset();
+                setLoading(btn, false);
+            }, 600);
+        });
+
+        // Export
+        function exportData(type) {
+            let data, filename;
+            if (type === 'users') {
+                data = Users.all().map(u => ({ ...u, password: '[hidden]' }));
+                filename = 'pmo-users.json';
+            } else if (type === 'projects') {
+                data = Projects.all().map(p => ({ ...p, pdfData: p.pdfData ? '[pdf data]' : null }));
+                filename = 'pmo-projects.json';
+            } else {
+                data = {
+                    exportedAt: new Date().toISOString(),
+                    users: Users.all().map(u => ({ ...u, password: '[hidden]' })),
+                    projects: Projects.all().map(p => ({ ...p, pdfData: p.pdfData ? '[pdf data]' : null })),
+                    announcements: Announcements.all(),
+                    departments: Departments.all(),
+                    batches: Batches.all(),
+                };
+                filename = 'pmo-full-export.json';
+            }
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+            showToast('Data exported!', 'success');
+        }
+
+        // Danger zone
+        function clearAllProjects() {
+            showConfirm('Clear All Projects', 'Delete ALL projects permanently? This cannot be undone.',
+                () => { localStorage.removeItem('fyp_projects'); showToast('All projects cleared.', 'success'); }, { danger: true });
+        }
+        function clearAllUsers() {
+            showConfirm('Clear All Students', 'Delete ALL student accounts permanently?',
+                () => { localStorage.removeItem('fyp_users'); showToast('All students cleared.', 'success'); }, { danger: true });
+        }
+        function resetAll() {
+            showConfirm('Factory Reset', 'Reset ALL data to factory defaults? This will delete everything.',
+                () => {
+                    ['fyp_users', 'fyp_projects', 'fyp_announcements', 'fyp_departments', 'fyp_batches', 'fyp_activity', 'fyp_liked'].forEach(k => localStorage.removeItem(k));
+                    showToast('Factory reset complete. Reloading…', 'success');
+                    setTimeout(() => location.reload(), 1200);
+                }, { danger: true });
+        }
+    </script>
+</body>
+
+</html>

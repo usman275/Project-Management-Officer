@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Projects — Project Management</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🎓</div>
+                <div class="sidebar-logo-text">Project Management<span>Employee Portal</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Navigation</span>
+                <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">🏠</span> Dashboard</a>
+                <a href="browse.html" class="sidebar-link active"><span class="nav-icon">🔍</span> Browse
+                    Projects</a>
+                <a href="upload.html" class="sidebar-link"><span class="nav-icon">📤</span> Upload Project</a>
+                <a href="my-projects.html" class="sidebar-link"><span class="nav-icon">📁</span> My
+                    Projects</a>
+                <span class="sidebar-section-label">Account</span>
+                <a href="profile.html" class="sidebar-link"><span class="nav-icon">👤</span> My Profile</a>
+                <a href="#" class="sidebar-link" onclick="Auth.logout()"><span class="nav-icon">🚪</span> Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm" id="topbar-avatar"
+                        style="background:linear-gradient(135deg,#3b52d4,#6b7ff5);cursor:pointer"
+                        onclick="location.href='profile.html'" title="View Profile">U</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Employee</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div>
+                        <div class="topbar-title">Browse Projects</div>
+                        <div class="topbar-subtitle">Explore research from all departments</div>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div style="font-size:.8rem;color:var(--gray-500)" id="result-count-top"></div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <!-- Filters -->
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="search-input" placeholder="Search by title, supervisor, tags, keywords…"
+                            autocomplete="off" />
+                    </div>
+                    <select class="filter-select" id="dept-filter">
+                        <option value="">All Departments</option>
+                    </select>
+                    <select class="filter-select" id="batch-filter">
+                        <option value="">All Batches</option>
+                    </select>
+                    <div style="display:flex;gap:8px">
+                        <button class="btn btn-ghost btn-sm" id="view-grid" title="Grid view"
+                            style="font-size:1rem">⊞</button>
+                        <button class="btn btn-ghost btn-sm" id="view-list" title="List view"
+                            style="font-size:1rem">☰</button>
+                    </div>
+                </div>
+
+                <!-- Results & sort bar -->
+                <div
+                    style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);flex-wrap:wrap;gap:var(--space-3)">
+                    <span id="result-count" style="font-size:.875rem;color:var(--gray-500)">Loading projects…</span>
+                    <select class="filter-select" id="sort-select" style="min-width:160px">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="most-liked">Most Liked</option>
+                        <option value="most-viewed">Most Viewed</option>
+                        <option value="az">A–Z</option>
+                    </select>
+                </div>
+
+                <!-- Projects container -->
+                <div id="projects-container" class="project-grid"></div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        if (!requireStudent()) throw new Error('not logged in');
+        initSidebar();
+        initTopbar('employee');
+
+        let currentPage = 1;
+        let viewMode = 'grid';
+
+        // Populate filters
+        const deptSel = document.getElementById('dept-filter');
+        Departments.all().forEach(d => {
+            const o = document.createElement('option'); o.value = d.name; o.textContent = d.name;
+            deptSel.appendChild(o);
+        });
+        const batchSel = document.getElementById('batch-filter');
+        [...Batches.all()].reverse().forEach(b => {
+            const o = document.createElement('option'); o.value = b; o.textContent = b + ' Cohort';
+            batchSel.appendChild(o);
+        });
+
+        function getFiltered() {
+            const q = document.getElementById('search-input').value.trim();
+            const dept = document.getElementById('dept-filter').value;
+            const Cohort = document.getElementById('batch-filter').value;
+            const recent = Projects.approved().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
+            const list = document.getElementById('recent-projects-list');
+            list.innerHTML = recent.length ? recent.map(p => `
+    <div onclick="location.href='project.html?id=${p.id}'" style="
+      display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);
+      border-radius:var(--radius-2);cursor:pointer;
+      transition:background-color .2s ease;
+    ">
+      <div style="
+        width:40px;height:40px;border-radius:var(--radius-1);
+        background:linear-gradient(135deg,var(--brand-500),var(--brand-300));
+        display:flex;align-items:center;justify-content:center;
+        font-size:1.2rem;color:white;flex-shrink:0;
+      ">💡</div>
+      <div style="flex-grow:1">
+        <div style="font-weight:600;color:var(--white);font-size:.9rem">${escapeHtml(truncate(p.title, 40))}</div>
+        <div style="font-size:.75rem;color:var(--gray-500)">${escapeHtml(p.authorName)} · ${escapeHtml(p.department)}</div>
+      </div>
+    </div>
+  `).join('') : '<div style="padding:var(--space-3);color:var(--gray-500)">No recent projects.</div>';
+            let results = Projects.search(q, dept, Cohort, 'approved');
+            const sort = document.getElementById('sort-select').value;
+            if (sort === 'newest') results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            else if (sort === 'oldest') results.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            else if (sort === 'most-liked') results.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+            else if (sort === 'most-viewed') results.sort((a, b) => (b.views || 0) - (a.views || 0));
+            else if (sort === 'az') results.sort((a, b) => a.title.localeCompare(b.title));
+            return results;
+        }
+
+        function render() {
+            const all = getFiltered();
+            const pager = paginate(all, currentPage, 9);
+            document.getElementById('result-count').textContent = `${all.length} project${all.length !== 1 ? 's' : ''} found`;
+            document.getElementById('result-count-top').textContent = `${all.length} results`;
+            const c = document.getElementById('projects-container');
+            c.className = viewMode === 'grid' ? 'project-grid' : '';
+
+            if (!pager.items.length) {
+                c.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">🔍</div>
+        <h3>No Projects Found</h3>
+        <p>Try adjusting your search filters or browse all departments.</p>
+        <button class="btn btn-outline" onclick="clearFilters()">Clear Filters</button>
+      </div>`;
+            } else if (viewMode === 'grid') {
+                c.innerHTML = pager.items.map(p => `
+        <div class="project-card" onclick="location.href='project.html?id=${p.id}'">
+          <div class="project-card-header">
+            <div class="project-card-dept">${escapeHtml(p.department)} · ${escapeHtml(p.batch)}</div>
+            <h3>${escapeHtml(p.title)}</h3>
+          </div>
+          <div class="project-card-body">
+            <p class="project-card-abstract">${escapeHtml(p.abstract)}</p>
+            <div class="project-card-meta">
+              <span>👨‍🏫 ${escapeHtml(p.supervisor)}</span>
+              <span>👤 ${escapeHtml(p.authorName)}</span>
+            </div>
+          </div>
+          <div class="project-card-footer">
+            <div class="project-tags">${(p.tags || []).slice(0, 3).map(t => `<span class="project-tag">${escapeHtml(t)}</span>`).join('')}</div>
+            <div style="font-size:.72rem;color:var(--gray-600);white-space:nowrap">👁 ${p.views || 0} · ❤️ ${p.likes || 0}</div>
+          </div>
+        </div>
+      `).join('');
+            } else {
+                c.innerHTML = `<div class="table-wrapper" style="margin-bottom:var(--space-4)">
+        <table class="table">
+          <thead><tr><th>Project Title</th><th>Department</th><th>Batch</th><th>Supervisor</th><th>Views</th><th>Likes</th></tr></thead>
+          <tbody>${pager.items.map(p => `
+            <tr onclick="location.href='project.html?id=${p.id}'" style="cursor:pointer">
+              <td><div style="font-weight:600;color:var(--white)">${escapeHtml(truncate(p.title, 60))}</div>
+                  <div style="font-size:.75rem;color:var(--gray-500)">${escapeHtml(p.authorName)}</div></td>
+              <td>${escapeHtml(p.department)}</td>
+              <td><span class="badge badge-primary">${escapeHtml(p.batch)}</span></td>
+              <td>${escapeHtml(p.supervisor)}</td>
+              <td>${p.views || 0}</td>
+              <td>❤️ ${p.likes || 0}</td>
+            </tr>
+          `).join('')}</tbody>
+        </table>
+      </div>`;
+            }
+
+            renderPagination(pager, 'pagination', (pg) => { currentPage = pg; render(); });
+        }
+
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('dept-filter').value = '';
+            document.getElementById('batch-filter').value = '';
+            currentPage = 1;
+            render();
+        }
+
+        // Event listeners
+        ['search-input', 'dept-filter', 'batch-filter', 'sort-select'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => { currentPage = 1; render(); });
+            if (id !== 'search-input') document.getElementById(id).addEventListener('change', () => { currentPage = 1; render(); });
+        });
+
+        document.getElementById('view-grid').addEventListener('click', () => { viewMode = 'grid'; render(); });
+        document.getElementById('view-list').addEventListener('click', () => { viewMode = 'list'; render(); });
+
+        render();
+    </script>
+</body>
+
+</html>

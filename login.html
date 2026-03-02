@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Login — Project Management</title>
+    <meta name="description" content="Sign in to your Project Management employee account." />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/auth.css" />
+</head>
+
+<body class="auth-page">
+    <div class="auth-bg"></div>
+    <div class="auth-bg-accent"></div>
+    <div class="auth-grid"></div>
+
+    <div class="auth-card" style="animation-duration:.5s">
+        <div class="auth-logo">
+            <div class="auth-logo-icon" style="width:52px;height:52px;font-size:1.4rem">📊</div>
+            <h1>Project Management</h1>
+            <p>Business Project Management System</p>
+        </div>
+
+        <div class="auth-heading">
+            <h2>Welcome Back</h2>
+            <p>Sign in to continue</p>
+        </div>
+
+        <form id="login-form" autocomplete="on" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <div class="input-group">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="email" class="form-control" placeholder="employee@company.com"
+                        autocomplete="email" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    Password
+                    <a href="#" style="float:right;font-weight:400;font-size:.8rem;color:var(--gray-500)"
+                        onclick="showForgot(event)">Forgot password?</a>
+                </label>
+                <div class="input-group has-right">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password"
+                        autocomplete="current-password" required />
+                    <span class="input-icon-right" onclick="togglePass('password',this)"
+                        title="Show/hide password">👁️</span>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--space-4)">
+                <label class="checkbox-group">
+                    <input type="checkbox" id="remember" />
+                    Remember me
+                </label>
+            </div>
+
+            <div id="form-error" class="form-error" style="margin-bottom:var(--space-4);display:none"></div>
+
+            <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn">Sign In</button>
+        </form>
+
+        <div class="divider-text">or</div>
+        <div style="text-align:center;margin-bottom:var(--space-4)">
+            <p style="font-size:.78rem;color:var(--gray-600);margin-bottom:6px">Quick access</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+                <button class="btn btn-ghost btn-sm" onclick="fillDemo('zain@company.com','zain123')">Zain
+                    (Eng)</button>
+                <button class="btn btn-ghost btn-sm" onclick="fillDemo('ayesha@company.com','ayesha123')">Ayesha
+                    (Dev)</button>
+                <button class="btn btn-ghost btn-sm" onclick="fillDemo('bilal@company.com','bilal123')">Bilal
+                    (AI)</button>
+            </div>
+        </div>
+
+        <div class="auth-footer-link">
+            Don't have an account? <a href="signup.html">Create one →</a>
+        </div>
+        <div class="auth-footer-link" style="margin-top:8px">
+            <a href="index.html">← Back to Home</a>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+        redirectIfLoggedIn();
+
+        function togglePass(id, icon) {
+            const inp = document.getElementById(id);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            icon.textContent = inp.type === 'password' ? '👁️' : '🙈';
+        }
+
+        function fillDemo(email, pass) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = pass;
+        }
+
+        function showForgot(e) {
+            e.preventDefault();
+            showToast('Please contact your department administrator to reset your password.', 'info', 5000);
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errEl = document.getElementById('form-error');
+            const btn = document.getElementById('login-btn');
+
+            errEl.style.display = 'none';
+
+            const v = validate([
+                { field: 'email', value: email, label: 'Email', required: true },
+                { field: 'password', value: password, label: 'Password', required: true },
+            ]);
+            if (!v.ok) { errEl.textContent = v.error; errEl.style.display = 'flex'; return; }
+
+            setLoading(btn, true, 'Signing in…');
+            setTimeout(() => {
+                const result = Auth.login(email, password);
+                if (result.ok) {
+                    showToast('Login successful! Welcome back.', 'success');
+                    setTimeout(() => location.href = 'student/dashboard.html', 600);
+                } else {
+                    errEl.textContent = result.error;
+                    errEl.style.display = 'flex';
+                    setLoading(btn, false);
+                    document.getElementById('password').classList.add('error');
+                }
+            }, 700);
+        });
+    </script>
+</body>
+
+</html>

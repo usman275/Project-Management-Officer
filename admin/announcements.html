@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Announcements — Project Management Admin</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+    <link rel="stylesheet" href="../styles/admin.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🏛️</div>
+                <div class="sidebar-logo-text">Project Management<span>Admin Panel</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Dashboard</span>
+                <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">📊</span> Overview</a>
+                <span class="sidebar-section-label">Management</span>
+                <a href="users.html" class="sidebar-link"><span class="nav-icon">👥</span> Manage Users</a>
+                <a href="projects.html" class="sidebar-link"><span class="nav-icon">📁</span> Manage Projects</a>
+                <a href="departments.html" class="sidebar-link"><span class="nav-icon">🏫</span> Departments &
+                    Batches</a>
+                <a href="announcements.html" class="sidebar-link active"><span class="nav-icon">📢</span>
+                    Announcements</a>
+                <span class="sidebar-section-label">System</span>
+                <a href="settings.html" class="sidebar-link"><span class="nav-icon">⚙️</span> Settings</a>
+                <a href="#" class="sidebar-link" onclick="Auth.adminLogout()"><span class="nav-icon">🚪</span>
+                    Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm"
+                        style="background:linear-gradient(135deg,#b8770c,#f5b93e);color:#1a1000">AD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar admin-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div class="topbar-title">Announcements</div>
+                </div>
+                <div class="topbar-right">
+                    <button class="btn btn-accent btn-sm" onclick="showNewAnn()">+ New Announcement</button>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div id="ann-list"></div>
+            </div>
+        </main>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        if (!requireAdmin()) throw new Error('not admin');
+        initSidebar();
+        initTopbar('admin');
+
+        function render() {
+            const anns = Announcements.all().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            const c = document.getElementById('ann-list');
+            c.innerHTML = anns.length ? anns.map(a => `
+      <div class="announcement-card" style="border-left:3px solid ${a.pinned ? 'var(--accent-400)' : 'var(--primary-400)'}">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:6px">
+            ${a.pinned ? '<span class="badge badge-accent">📌 Pinned</span>' : ''}
+            <span class="announcement-time">${formatDateTime(a.createdAt)}</span>
+          </div>
+          <div class="announcement-title">${escapeHtml(a.title)}</div>
+          <div class="announcement-body">${escapeHtml(a.body)}</div>
+        </div>
+        <div class="announcement-actions">
+          <button class="action-btn edit"   onclick="editAnn('${a.id}')" title="Edit">✏️</button>
+          <button class="action-btn ${a.pinned ? 'reject' : 'approve'}" onclick="togglePin('${a.id}')" title="${a.pinned ? 'Unpin' : 'Pin'}">${a.pinned ? '📌' : '📍'}</button>
+          <button class="action-btn delete" onclick="deleteAnn('${a.id}')" title="Delete">🗑️</button>
+        </div>
+      </div>
+    `).join('') : `
+      <div class="empty-state">
+        <div class="empty-icon">📢</div>
+        <h3>No Announcements</h3>
+        <p>Create your first announcement to inform students.</p>
+        <button class="btn btn-primary" onclick="showNewAnn()">+ Create Announcement</button>
+      </div>
+    `;
+        }
+
+        function showAnnModal(title, ann) {
+            showModal(title, `
+      <div class="form-group"><label class="form-label">Title *</label>
+        <input type="text" id="ann-title" class="form-control" value="${ann ? escapeHtml(ann.title) : ''}" placeholder="Announcement title…" /></div>
+      <div class="form-group"><label class="form-label">Content *</label>
+        <textarea id="ann-body" class="form-control" rows="5" placeholder="Write your announcement here…">${ann ? escapeHtml(ann.body) : ''}</textarea></div>
+      <div class="form-group">
+        <label class="checkbox-group">
+          <input type="checkbox" id="ann-pinned" ${ann && ann.pinned ? 'checked' : ''} />
+          📌 Pin this announcement (shows as banner on student dashboard)
+        </label>
+      </div>
+    `, {
+                footerHtml: `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveAnn('${ann ? ann.id : ''}')">Save</button>`
+            });
+        }
+
+        function showNewAnn() { showAnnModal('📢 New Announcement', null); }
+
+        function editAnn(id) {
+            const a = Announcements.get(id);
+            showAnnModal('✏️ Edit Announcement', a);
+        }
+
+        function saveAnn(id) {
+            const title = document.getElementById('ann-title').value.trim();
+            const body = document.getElementById('ann-body').value.trim();
+            const pinned = document.getElementById('ann-pinned').checked;
+            if (!title || !body) { showToast('Title and content are required.', 'error'); return; }
+
+            if (id) {
+                Announcements.update(id, { title, body, pinned });
+                showToast('Announcement updated!', 'success');
+            } else {
+                Announcements.create({ title, body, pinned });
+                showToast('Announcement posted!', 'success');
+            }
+            closeModal();
+            render();
+        }
+
+        function togglePin(id) {
+            const a = Announcements.get(id);
+            Announcements.update(id, { pinned: !a.pinned });
+            showToast(a.pinned ? 'Unpinned.' : 'Pinned to student dashboard!', 'info');
+            render();
+        }
+
+        function deleteAnn(id) {
+            const a = Announcements.get(id);
+            showConfirm('Delete Announcement', `Delete "${truncate(a.title, 50)}"?`,
+                () => { Announcements.delete(id); showToast('Deleted.', 'success'); render(); },
+                { danger: true }
+            );
+        }
+
+        render();
+    </script>
+</body>
+
+</html>

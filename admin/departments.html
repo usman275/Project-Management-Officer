@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Departments & Batches — Project Management Admin</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <link rel="stylesheet" href="../styles/student.css" />
+    <link rel="stylesheet" href="../styles/admin.css" />
+</head>
+
+<body>
+    <div class="portal-layout">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <aside class="sidebar admin-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">🏛️</div>
+                <div class="sidebar-logo-text">Project Management<span>Admin Panel</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <span class="sidebar-section-label">Dashboard</span>
+                <a href="dashboard.html" class="sidebar-link"><span class="nav-icon">📊</span> Overview</a>
+                <span class="sidebar-section-label">Management</span>
+                <a href="users.html" class="sidebar-link"><span class="nav-icon">👥</span> Manage Users</a>
+                <a href="projects.html" class="sidebar-link"><span class="nav-icon">📁</span> Manage Projects</a>
+                <a href="departments.html" class="sidebar-link active"><span class="nav-icon">🏫</span> Departments &
+                    Batches</a>
+                <a href="announcements.html" class="sidebar-link"><span class="nav-icon">📢</span> Announcements</a>
+                <span class="sidebar-section-label">System</span>
+                <a href="settings.html" class="sidebar-link"><span class="nav-icon">⚙️</span> Settings</a>
+                <a href="#" class="sidebar-link" onclick="Auth.adminLogout()"><span class="nav-icon">🚪</span>
+                    Logout</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm"
+                        style="background:linear-gradient(135deg,#b8770c,#f5b93e);color:#1a1000">AD</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+                        <div class="sidebar-user-role" id="sidebar-user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="portal-main">
+            <div class="portal-topbar admin-topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menu-toggle">☰</button>
+                    <div class="topbar-title">Departments & Batches</div>
+                </div>
+            </div>
+
+            <div class="portal-content">
+                <div class="grid-2" style="gap:var(--space-6);align-items:start">
+
+                    <!-- Departments -->
+                    <div>
+                        <div class="section-header">
+                            <h2 class="section-title">Departments</h2>
+                            <button class="btn btn-primary btn-sm" onclick="showAddDept()">+ Add Department</button>
+                        </div>
+                        <div id="dept-list" class="tag-grid"></div>
+                    </div>
+
+                    <!-- Batches -->
+                    <div>
+                        <div class="section-header">
+                            <h2 class="section-title">Academic Batches</h2>
+                            <button class="btn btn-primary btn-sm" onclick="showAddBatch()">+ Add Cohort</button>
+                        </div>
+                        <div id="batch-list" class="tag-grid"></div>
+                        <div
+                            style="margin-top:var(--space-4);padding:var(--space-4);background:rgba(245,185,62,.06);border:1px solid rgba(245,185,62,.15);border-radius:var(--radius-md);font-size:.8rem;color:var(--gray-500)">
+                            ⚠️ Removing a Cohort will not delete submitted projects — it only removes the Cohort from
+                            dropdown options.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+        if (!requireAdmin()) throw new Error('not admin');
+        initSidebar();
+        initTopbar('admin');
+
+        function renderDepts() {
+            const depts = Departments.all();
+            document.getElementById('dept-list').innerHTML = depts.map(d => `
+      <div class="tag-manager-item">
+        <div>
+          <div style="font-weight:600;font-size:.875rem;color:var(--white)">${escapeHtml(d.name)}</div>
+          <div style="font-size:.72rem;color:var(--gray-600)">${escapeHtml(d.code)}</div>
+        </div>
+        <div class="item-actions">
+          <button class="action-btn edit" onclick="editDept('${d.id}')" title="Edit">✏️</button>
+          <button class="action-btn delete" onclick="deleteDept('${d.id}')" title="Delete">🗑️</button>
+        </div>
+      </div>
+    `).join('') || '<p style="color:var(--gray-600);font-size:.875rem">No departments.</p>';
+        }
+
+        function renderBatches() {
+            const batches = Batches.all();
+            document.getElementById('batch-list').innerHTML = [...batches].reverse().map(b => `
+      <div class="tag-manager-item">
+        <div style="font-weight:600;color:var(--white)">${escapeHtml(b)} Cohort</div>
+        <button class="action-btn delete" onclick="deleteBatch('${b}')" title="Remove">🗑️</button>
+      </div>
+    `).join('') || '<p style="color:var(--gray-600);font-size:.875rem">No batches.</p>';
+        }
+
+        function showAddDept() {
+            showModal('➕ Add Department', `
+      <div class="form-group"><label class="form-label">Department Name *</label><input type="text" id="new-dept-name" class="form-control" placeholder="e.g., Cybersecurity" /></div>
+      <div class="form-group"><label class="form-label">Short Code *</label><input type="text" id="new-dept-code" class="form-control" placeholder="e.g., CS" maxlength="5" /></div>
+    `, {
+                size: 'sm',
+                footerHtml: `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveDept()">Add</button>`
+            });
+        }
+
+        function saveDept() {
+            const name = document.getElementById('new-dept-name').value.trim();
+            const code = document.getElementById('new-dept-code').value.trim();
+            if (!name || !code) { showToast('Name and code are required.', 'error'); return; }
+            Departments.create(name, code);
+            showToast('Department added!', 'success'); closeModal(); renderDepts();
+        }
+
+        function editDept(id) {
+            const d = Departments.get(id);
+            showModal('✏️ Edit Department', `
+      <div class="form-group"><label class="form-label">Department Name</label><input type="text" id="edit-dept-name" class="form-control" value="${escapeHtml(d.name)}" /></div>
+      <div class="form-group"><label class="form-label">Short Code</label><input type="text" id="edit-dept-code" class="form-control" value="${escapeHtml(d.code)}" maxlength="5" /></div>
+    `, {
+                size: 'sm',
+                footerHtml: `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveEditDept('${id}')">Save</button>`
+            });
+        }
+
+        function saveEditDept(id) {
+            const name = document.getElementById('edit-dept-name').value.trim();
+            const code = document.getElementById('edit-dept-code').value.trim();
+            if (!name || !code) { showToast('All fields required.', 'error'); return; }
+            Departments.update(id, { name, code: code.toUpperCase() });
+            showToast('Department updated!', 'success'); closeModal(); renderDepts();
+        }
+
+        function deleteDept(id) {
+            const d = Departments.get(id);
+            showConfirm('Delete Department', `Delete "${d.name}"? Existing project records will still reference this name.`,
+                () => { Departments.delete(id); showToast('Deleted.', 'success'); renderDepts(); }, { danger: true });
+        }
+
+        function showAddBatch() {
+            showModal('➕ Add Year', `
+      <div class="form-group"><label class="form-label">Year *</label>
+      <input type="number" id="new-batch" class="form-control" placeholder="${new Date().getFullYear()}" min="2000" max="2040" /></div>
+    `, {
+                size: 'sm',
+                footerHtml: `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveBatch()">Add</button>`
+            });
+        }
+
+        function saveBatch() {
+            const y = document.getElementById('new-batch').value.trim();
+            if (!y || isNaN(y)) { showToast('Enter a valid year.', 'error'); return; }
+            Batches.add(y);
+            showToast('Batch added!', 'success'); closeModal(); renderBatches();
+        }
+
+        function deleteBatch(year) {
+            showConfirm('Remove Cohort', `Remove "${year}" from the Cohort list?`,
+                () => { Batches.remove(year); showToast('Batch removed.', 'success'); renderBatches(); }, { danger: true });
+        }
+
+        renderDepts();
+        renderBatches();
+    </script>
+</body>
+
+</html>

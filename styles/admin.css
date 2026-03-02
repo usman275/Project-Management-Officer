@@ -1,0 +1,490 @@
+/* ============================================================
+   ADMIN PANEL LAYOUT — Light Theme
+   ============================================================ */
+
+/* Admin sidebar color override */
+.sidebar.admin-sidebar {
+    background: var(--white);
+    border-right: 1px solid var(--gray-300);
+}
+
+.sidebar.admin-sidebar .sidebar-logo-icon {
+    background: linear-gradient(135deg, var(--accent-600), var(--accent-400));
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+
+.sidebar.admin-sidebar .sidebar-link.active {
+    background: var(--accent-100);
+    color: var(--accent-600);
+    border-color: rgba(139, 92, 246, 0.2);
+    font-weight: 600;
+}
+
+/* ============================================================
+   ADMIN TOPBAR
+   ============================================================ */
+.portal-topbar.admin-topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-300);
+}
+
+.admin-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.825rem;
+    color: var(--gray-500);
+}
+
+.admin-breadcrumb span {
+    color: var(--gray-600);
+}
+
+.admin-breadcrumb .crumb-active {
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.admin-breadcrumb .crumb-sep {
+    color: var(--gray-300);
+}
+
+/* ============================================================
+   ADMIN DASHBOARD ANALYTICS
+   ============================================================ */
+.chart-card {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-sm);
+}
+
+.chart-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+}
+
+.chart-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.chart-card-subtitle {
+    font-size: 0.775rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+}
+
+/* Simple bar chart */
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 160px;
+}
+
+.bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.bar {
+    width: 100%;
+    background: linear-gradient(180deg, var(--primary-400), var(--primary-600));
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+.bar:hover::after {
+    content: attr(data-value);
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gray-900);
+    color: var(--white);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.bar.gold {
+    background: linear-gradient(180deg, var(--accent-400), var(--accent-600));
+}
+
+.bar.green {
+    background: linear-gradient(180deg, #34d399, #059669);
+}
+
+.bar-label {
+    font-size: 0.68rem;
+    color: var(--gray-500);
+    white-space: nowrap;
+}
+
+/* Donut chart */
+.donut-chart {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary-400) 0% var(--p1, 40%),
+            var(--accent-400) var(--p1, 40%) var(--p2, 65%),
+            #34d399 var(--p2, 65%) var(--p3, 85%),
+            var(--gray-300) var(--p3, 85%) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.donut-chart::after {
+    content: '';
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background: var(--white);
+    border-radius: 50%;
+}
+
+.donut-center {
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+}
+
+.donut-center-value {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--gray-900);
+}
+
+.donut-center-label {
+    font-size: 0.65rem;
+    color: var(--gray-500);
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--gray-600);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   ADMIN TABLE ACTIONS
+   ============================================================ */
+.action-cell {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.action-btn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    color: var(--gray-500);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+    background: var(--gray-200);
+    color: var(--gray-800);
+}
+
+.action-btn.view:hover {
+    background: var(--info-100);
+    color: var(--info-500);
+    border-color: var(--info-500);
+}
+
+.action-btn.approve:hover {
+    background: var(--success-100);
+    color: var(--success-500);
+    border-color: var(--success-500);
+}
+
+.action-btn.reject:hover {
+    background: var(--warning-100);
+    color: var(--warning-500);
+    border-color: var(--warning-500);
+}
+
+.action-btn.delete:hover {
+    background: var(--error-100);
+    color: var(--error-500);
+    border-color: var(--error-500);
+}
+
+.action-btn.edit:hover {
+    background: var(--accent-100);
+    color: var(--accent-600);
+    border-color: var(--accent-500);
+}
+
+/* Bulk actions bar */
+.bulk-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 12px var(--space-4);
+    background: var(--primary-100);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.bulk-bar.hidden {
+    display: none;
+}
+
+.bulk-count {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--primary-700);
+}
+
+.bulk-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--gray-300);
+}
+
+/* ============================================================
+   ADMIN FORM - Add/Edit records
+   ============================================================ */
+.admin-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+/* ============================================================
+   ACTIVITY LOG
+   ============================================================ */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.activity-item {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--gray-200);
+    align-items: flex-start;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.activity-body {
+    flex: 1;
+}
+
+.activity-action {
+    font-size: 0.85rem;
+    color: var(--gray-700);
+    line-height: 1.4;
+}
+
+.activity-action strong {
+    color: var(--gray-900);
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    margin-top: 3px;
+}
+
+/* ============================================================
+   SETTINGS FORM
+   ============================================================ */
+.settings-section {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-5);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.settings-section-header {
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: var(--gray-100);
+}
+
+.settings-section-header h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.settings-section-body {
+    padding: var(--space-6);
+}
+
+/* Danger zone */
+.settings-section.danger {
+    border-color: rgba(220, 38, 38, 0.25);
+}
+
+.settings-section.danger .settings-section-header {
+    background: var(--error-100);
+    border-color: rgba(220, 38, 38, 0.15);
+}
+
+.settings-section.danger h3 {
+    color: var(--error-500);
+}
+
+/* ============================================================
+   TAGS MANAGER (departments / batches)
+   ============================================================ */
+.tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-3);
+}
+
+.tag-manager-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    transition: all var(--transition-fast);
+}
+
+.tag-manager-item:hover {
+    background: var(--primary-100);
+    border-color: rgba(99, 102, 241, 0.3);
+    color: var(--primary-700);
+}
+
+.tag-manager-item .item-actions {
+    display: flex;
+    gap: 4px;
+}
+
+/* Announcement card */
+.announcement-card {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    display: flex;
+    gap: var(--space-4);
+    transition: all var(--transition-fast);
+    margin-bottom: var(--space-4);
+    box-shadow: var(--shadow-sm);
+}
+
+.announcement-card:hover {
+    border-color: var(--primary-300);
+    box-shadow: var(--shadow-md);
+}
+
+.announcement-time {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    margin-top: 4px;
+}
+
+.announcement-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+}
+
+.announcement-body {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+}
+
+.announcement-actions {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+}
+
+/* ============================================================
+   RESPONSIVE - Admin
+   ============================================================ */
+@media (max-width: 1024px) {
+    .admin-form .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .chart-card {
+        padding: var(--space-4);
+    }
+
+    .action-cell {
+        flex-wrap: wrap;
+    }
+}

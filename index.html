@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Management — Business Project Management System</title>
+  <meta name="description"
+    content="A centralized platform for managing, uploading, and discovering business projects. Organize your team's work in one secure, searchable system." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/auth.css" />
+</head>
+
+<body>
+
+  <!-- ══ NAVBAR ══════════════════════════════════════════════ -->
+  <nav class="public-nav" id="main-nav">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📊</div>
+      <span>Project <span style="color:var(--accent-400)">Management</span></span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#stats">Stats</a>
+      <a href="admin/login.html">Admin</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+      <a href="signup.html" class="btn btn-primary btn-sm">Get Started</a>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ══ HERO ═════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="container" style="display:flex;align-items:center;gap:60px">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Project Management Platform
+        </div>
+        <h1>Manage Projects.<br><span class="gradient-text">Drive Results.</span></h1>
+        <p class="hero-sub">One secure platform for your entire organization to submit, review, and discover projects —
+          from idea to delivery.</p>
+        <div class="hero-actions">
+          <a href="signup.html" class="btn btn-primary btn-lg">Get Started</a>
+          <a href="browse-redirect.html" class="btn btn-outline btn-lg">Browse Projects</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="stat-n" id="cnt-projects">0<span>+</span></div>
+            <div class="stat-l">Projects</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-n" id="cnt-students">0<span>+</span></div>
+            <div class="stat-l">Employees</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-n" id="cnt-depts">0<span>+</span></div>
+            <div class="stat-l">Departments</div>
+          </div>
+          <div class="hero-stat">
+            <div class="stat-n" id="cnt-batches">0<span>+</span></div>
+            <div class="stat-l">Years</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="floating-card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <div
+              style="width:40px;height:40px;background:linear-gradient(135deg,#3b52d4,#6b7ff5);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem">
+              🤖</div>
+            <div>
+              <div style="font-weight:700;font-size:.88rem;color:var(--white)">AI Medical Diagnosis System</div>
+              <div style="font-size:.72rem;color:var(--gray-500)">R&D &middot; 2023</div>
+            </div>
+            <span class="badge badge-success" style="margin-left:auto">Approved</span>
+          </div>
+          <p style="font-size:.78rem;color:var(--gray-500);line-height:1.6;margin-bottom:14px">Deep learning system for
+            medical image analysis with 94.7% diagnostic accuracy.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;gap:12px;font-size:.75rem;color:var(--gray-500)">
+              <span>👁 156 views</span><span>❤️ 24 likes</span>
+            </div>
+            <div style="display:flex;gap:4px">
+              <span class="project-tag">ML</span>
+              <span class="project-tag">CNN</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FEATURES ═════════════════════════════════════════════ -->
+  <section class="section" id="features">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:var(--space-10)">
+        <span class="badge badge-primary" style="margin-bottom:var(--space-3);display:inline-flex">Platform
+          Features</span>
+        <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin-bottom:var(--space-3)">Everything You Need
+          to <span class="gradient-text">Manage Projects</span></h2>
+        <p style="color:var(--gray-500);max-width:480px;margin:0 auto;font-size:.9rem">From submission to approval — a
+          complete ecosystem built for teams of any size.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="font-size:1.2rem">📤</div>
+          <h3>Project Upload</h3>
+          <p>Submit documentation, abstracts, and source links through a simple, guided form.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="font-size:1.2rem">🔍</div>
+          <h3>Smart Search</h3>
+          <p>Filter by department, year, manager, or tags. Find what you need in seconds.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="font-size:1.2rem">🔒</div>
+          <h3>Access Control</h3>
+          <p>Role-based permissions ensure projects are visible but only editable by their owners.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="font-size:1.2rem">🏛️</div>
+          <h3>Admin Dashboard</h3>
+          <p>Approve submissions, manage users, post announcements, and export reports.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="font-size:1.2rem">📚</div>
+          <h3>Project Archive</h3>
+          <p>Every project preserved permanently — searchable across all departments and years.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="font-size:1.2rem">📊</div>
+          <h3>Analytics</h3>
+          <p>Visual insights on submissions, engagement, and activity across your organization.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ HOW IT WORKS ══════════════════════════════════════════ -->
+  <section class="section section-alt" id="how-it-works">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:var(--space-10)">
+        <span class="badge badge-accent" style="margin-bottom:var(--space-3);display:inline-flex">How It Works</span>
+        <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800">Up and Running in Minutes</h2>
+      </div>
+      <div class="grid-3">
+        <div style="text-align:center;padding:var(--space-6)">
+          <div
+            style="width:48px;height:48px;background:linear-gradient(135deg,rgba(34,51,168,.3),rgba(59,82,212,.2));border:1px solid rgba(59,82,212,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto var(--space-3)">
+            👤</div>
+          <div
+            style="width:22px;height:22px;background:var(--primary-500);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:white;margin:0 auto -11px;position:relative;z-index:1">
+            1</div>
+          <h3 style="font-size:1rem;font-weight:700;margin-top:var(--space-4);margin-bottom:var(--space-2)">Create
+            Account</h3>
+          <p style="font-size:.85rem;color:var(--gray-500);line-height:1.6">Register with your employee ID and
+            department.</p>
+        </div>
+        <div style="text-align:center;padding:var(--space-6)">
+          <div
+            style="width:48px;height:48px;background:linear-gradient(135deg,rgba(176,119,12,.2),rgba(245,185,62,.1));border:1px solid rgba(245,185,62,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto var(--space-3)">
+            📁</div>
+          <div
+            style="width:22px;height:22px;background:var(--accent-500);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:white;margin:0 auto -11px;position:relative;z-index:1">
+            2</div>
+          <h3 style="font-size:1rem;font-weight:700;margin-top:var(--space-4);margin-bottom:var(--space-2)">Upload
+            Project</h3>
+          <p style="font-size:.85rem;color:var(--gray-500);line-height:1.6">Fill in project details and attach your
+            documentation.</p>
+        </div>
+        <div style="text-align:center;padding:var(--space-6)">
+          <div
+            style="width:48px;height:48px;background:linear-gradient(135deg,rgba(5,150,105,.2),rgba(16,185,129,.1));border:1px solid rgba(16,185,129,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto var(--space-3)">
+            🌐</div>
+          <div
+            style="width:22px;height:22px;background:#059669;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:white;margin:0 auto -11px;position:relative;z-index:1">
+            3</div>
+          <h3 style="font-size:1rem;font-weight:700;margin-top:var(--space-4);margin-bottom:var(--space-2)">Explore
+            &amp; Collaborate</h3>
+          <p style="font-size:.85rem;color:var(--gray-500);line-height:1.6">Browse approved projects, share feedback,
+            and build on ideas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ LATEST PROJECTS PREVIEW ═══════════════════════════════ -->
+  <section class="section" id="stats">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" style="font-size:1.4rem">Recent Projects</h2>
+        <a href="login.html" class="btn btn-outline btn-sm">View All →</a>
+      </div>
+      <div class="project-grid" id="latest-projects-grid">
+        <!-- rendered by JS -->
+      </div>
+      <div style="text-align:center;margin-top:var(--space-8)">
+        <a href="signup.html" class="btn btn-primary btn-lg">Get Started Free</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ═══════════════════════════════════════════════════ -->
+  <section
+    style="padding:80px 0;background:linear-gradient(135deg,rgba(22,33,168,.2),rgba(107,127,245,.08));border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)">
+    <div class="container" style="text-align:center">
+      <h2 style="font-size:clamp(1.6rem,3vw,2.4rem);font-weight:900;margin-bottom:var(--space-3)">Start Managing
+        Projects <span class="gradient-text">Today</span></h2>
+      <p
+        style="color:var(--gray-400);font-size:.95rem;margin-bottom:var(--space-7);max-width:420px;margin-left:auto;margin-right:auto">
+        Create your account and bring your team's work into one organized, searchable place.</p>
+      <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap">
+        <a href="signup.html" class="btn btn-primary btn-lg">Create Free Account</a>
+        <a href="admin/login.html" class="btn btn-ghost btn-lg">Admin Login</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo" style="margin-bottom:12px">
+            <div class="nav-logo-icon">📊</div>
+            <span>Project Management</span>
+          </a>
+          <p>Centralized project management for your entire organization.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Employees</h4>
+          <ul>
+            <li><a href="signup.html">Register</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="login.html">Upload Project</a></li>
+            <li><a href="login.html">Browse Projects</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Organization</h4>
+          <ul>
+            <li><a href="admin/login.html">Admin Login</a></li>
+            <li><a href="admin/login.html">Manage Users</a></li>
+            <li><a href="admin/login.html">Review Projects</a></li>
+            <li><a href="admin/login.html">Announcements</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Project Management. All rights reserved.</span>
+        <span>Built for Teams &amp; Organizations 🏂</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (Session.isEmployee() || Session.isStudent()) location.href = 'student/dashboard.html';
+    if (Session.isAdmin()) location.href = 'admin/dashboard.html';
+
+    // Counter animation
+    function animateCounter(el, target, suffix = '') {
+      let cur = 0;
+      const step = Math.max(1, Math.floor(target / 60));
+      const timer = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.innerHTML = cur + '<span>' + suffix + '</span>';
+        if (cur >= target) clearInterval(timer);
+      }, 25);
+    }
+
+    // Load stats
+    const stats = Stats.get();
+    const batches = Batches.all();
+    setTimeout(() => {
+      animateCounter(document.getElementById('cnt-projects'), stats.totalProjects, '+');
+      animateCounter(document.getElementById('cnt-students'), stats.totalUsers, '+');
+      animateCounter(document.getElementById('cnt-depts'), stats.departments, '+');
+      animateCounter(document.getElementById('cnt-batches'), batches.length, '+');
+    }, 300);
+
+    // Latest projects
+    const recent = Projects.approved().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 3);
+    const grid = document.getElementById('latest-projects-grid');
+    grid.innerHTML = recent.map(p => `
+    <div class="project-card" onclick="location.href='login.html'">
+      <div class="project-card-header">
+        <div class="project-card-dept">${escapeHtml(p.department)}</div>
+        <h3>${escapeHtml(p.title)}</h3>
+        <div style="display:flex;align-items:center;gap:var(--space-2);margin-top:6px">
+          <span class="badge badge-accent">${escapeHtml(p.batch)} Batch</span>
+          ${statusBadge(p.status)}
+        </div>
+      </div>
+      <div class="project-card-body">
+        <p class="project-card-abstract">${escapeHtml(p.abstract)}</p>
+        <div class="project-card-meta">
+          <span>👨‍🏫 ${escapeHtml(p.supervisor)}</span>
+          <span>👤 ${escapeHtml(p.authorName)}</span>
+        </div>
+      </div>
+      <div class="project-card-footer">
+        <div class="project-tags">${(p.tags || []).slice(0, 3).map(t => `<span class="project-tag">${escapeHtml(t)}</span>`).join('')}</div>
+        <div style="font-size:.75rem;color:var(--gray-500)">👁 ${p.views || 0} &nbsp; ❤️ ${p.likes || 0}</div>
+      </div>
+    </div>
+  `).join('') || '<div class="empty-state"><div class="empty-icon">📁</div><h3>No Projects Yet</h3><p>Be the first to upload a project!</p></div>';
+
+    // Mobile nav
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      document.getElementById('nav-links').style.display =
+        document.getElementById('nav-links').style.display === 'flex' ? '' : 'flex';
+      document.getElementById('nav-links').style.flexDirection = 'column';
+      document.getElementById('nav-links').style.position = 'fixed';
+      document.getElementById('nav-links').style.top = '68px';
+      document.getElementById('nav-links').style.left = '0';
+      document.getElementById('nav-links').style.right = '0';
+      document.getElementById('nav-links').style.background = 'rgba(6,11,31,.97)';
+      document.getElementById('nav-links').style.padding = '20px';
+      document.getElementById('nav-links').style.gap = '16px';
+      document.getElementById('nav-links').style.borderBottom = '1px solid rgba(255,255,255,.07)';
+      document.getElementById('nav-links').style.zIndex = '99';
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      document.getElementById('main-nav').style.background =
+        window.scrollY > 20 ? 'rgba(6,11,31,.98)' : 'rgba(6,11,31,.85)';
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Projects — Project Management</title>
+    <meta http-equiv="refresh" content="0; url=login.html" />
+</head>
+
+<body>
+    <p>Redirecting to login… <a href="login.html">Click here if not redirected</a></p>
+    <script>
+        // Redirect logged-in users directly to browse
+        try {
+            const s = JSON.parse(localStorage.getItem('fyp_session') || 'null');
+            if (s && s.role === 'student') location.href = 'student/browse.html';
+            else location.href = 'login.html';
+        } catch { location.href = 'login.html'; }
+    </script>
+</body>
+
+</html>
